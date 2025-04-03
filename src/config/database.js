@@ -1,11 +1,13 @@
-const Pool = require('pg').Pool
-const pool = new Pool({
-  user: 'test',
-  host: 'test',
-  database: 'test',
-  password: 'test',
-  port: 5432,
-})
+const DataSource = require("typeorm").DataSource;
+const dataSource = new DataSource({
+  type: process.env.TYPE,
+  host: process.env.HOST,
+  port: process.env.PORT,
+  username: process.env.USERNAME,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
+  synchronize: false,
+  entities: ["src/entities/*.js"],
+});
 
-module.exports = pool
-
+module.exports = dataSource;
