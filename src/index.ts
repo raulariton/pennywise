@@ -1,7 +1,12 @@
-require('dotenv').config(/*Env file location*/); 
-const express = require('express');
-const eventRoutes = require('./routes/eventRoutes');
-const myDataSource = require('./config/database');
+import 'reflect-metadata';
+import dotenv from 'dotenv';
+dotenv.config();
+import express from 'express';
+import eventRoutes from '@routes/eventRoutes';
+import myDataSource from '@config/database';
+
+const app = express();
+app.use(express.json());
 
 myDataSource
   .initialize()
@@ -13,9 +18,6 @@ myDataSource
   .catch((err) => {
     console.error("Error during Data Source initialization:", err)
   })
-
-const app = express();
-app.use(express.json());
 
 const port = 3001;
 
