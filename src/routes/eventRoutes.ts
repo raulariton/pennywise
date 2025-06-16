@@ -1,7 +1,7 @@
-import { Router } from "express";
-import eventController from '@controllers/eventController'
+import { Router } from 'express';
+import eventController from '@controllers/eventController';
 
 const router = Router();
 router.get('/', eventController.getUsers);
 
-export default router ;
+export default router;

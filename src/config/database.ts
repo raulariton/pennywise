@@ -1,5 +1,5 @@
-import { DataSource, DataSourceOptions } from "typeorm";
-import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
+import { DataSource } from 'typeorm';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 const config: PostgresConnectionOptions = {
   type: 'postgres',
@@ -9,8 +9,8 @@ const config: PostgresConnectionOptions = {
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
   synchronize: false,
-  entities: ["src/entities/*.ts"],
-}
+  entities: ['src/entities/*.ts'],
+};
 
 const dataSource = new DataSource(config);
 

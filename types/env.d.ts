@@ -1,11 +1,11 @@
-import { DataSourceOptions } from "typeorm";
-export {}
+import { DataSourceOptions } from 'typeorm';
+export {};
 
 declare global {
-  namespace NodeJS {   
+  namespace NodeJS {
     interface ProcessEnv {
       DATABASE_URL: string;
-      TYPE: DataSourceOptions
+      TYPE: DataSourceOptions;
       HOST: string;
       PORT: number;
       USERNAME: string;

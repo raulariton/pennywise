@@ -16,8 +16,8 @@ myDataSource
     });
   })
   .catch((err) => {
-    console.error("Error during Data Source initialization:", err)
-  })
+    console.error('Error during Data Source initialization:', err);
+  });
 
 const port = 3001;
 
