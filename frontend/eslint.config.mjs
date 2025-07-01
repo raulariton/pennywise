@@ -68,8 +68,6 @@ const eslintConfig = [
       'jsx-a11y/alt-text': 'warn',
       'jsx-a11y/anchor-is-valid': 'warn',
 
-      // Prettier formatting
-      'prettier/prettier': 'error',
     },
   },
 ];

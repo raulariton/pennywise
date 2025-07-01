@@ -38,7 +38,6 @@ const eslintConfig = [
       eqeqeq: 'error',
       'no-console': 'off',
       'max-len': ['warn', { code: 150 }],
-      'prettier/prettier': 'error',
     },
   },
 ];
