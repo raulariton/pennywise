@@ -4,13 +4,9 @@ export {};
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
+      TYPE: DataSourceOptions,
       DATABASE_URL: string;
-      TYPE: DataSourceOptions;
-      HOST: string;
-      PORT: number;
-      USERNAME: string;
-      PASSWORD: string;
-      DATABASE: string;
+      DATABASE_PASSWORD: string;
     }
   }
 }
