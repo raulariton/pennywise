@@ -45,15 +45,13 @@ More analytically,
 ### Backend
 - Node.js
 - Express.js
-- PostgreSQL (*through Supabase (?)*)
+- PostgreSQL (*through Supabase *)
 
 ### Frontend
 - Next.js
 - React
 - Tailwind CSS
 
-## Running the project
-
-### Backend
-
-### Frontend
+### Credits
+- [Boilerplate code for backend](https://github.com/BogdanOnetiu/pern-backend-boilerplate/tree/dev-typescript)
+- [Boilerplate code for frontend](https://github.com/BogdanOnetiu/pern-frontend-boilerplate)
