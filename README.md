@@ -2,7 +2,7 @@
 
 This repository contains both the backend and frontend source cod for the IBM summer practice project.
 
-To see our current development progress, feel free to check out the project corresponding to this repository.
+To see our current development progress, feel free to check out the [project corresponding to this repository](https://github.com/users/raulariton/projects/3).
 
 ## Project & Features
 
