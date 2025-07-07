@@ -99,6 +99,7 @@ export class AuthController {
       sameSite: 'strict',
     });
 
+    /*
     // invalidate refresh token
     // connect to Redis
     const redisClient = createClient();
@@ -121,6 +122,7 @@ export class AuthController {
       // set the expiration time for the key in Redis
         await redisClient.expire(`invalidatedTokens:${refreshToken}`, expirationTime - Math.floor(Date.now() / 1000));
     }
+     */
 
     // send response
     res.status(200).json({ message: 'User logged out successfully.' });

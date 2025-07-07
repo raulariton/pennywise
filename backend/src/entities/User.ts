@@ -23,7 +23,6 @@ export class User {
   @Column({ unique: true, nullable: true })
   username?: string;
 
-  // frontend should contain a "what should we call you?" onboarding step, with a skip option
   @Column({ nullable: true })
   name!: string;
 
