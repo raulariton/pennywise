@@ -1,7 +1,7 @@
 {
-  "name": "pern-backend-boilerplate",
+  "name": "Personal Expense Manager",
   "version": "1.0.0",
-  "description": "RESTful API with Node.js, Express, and PostgreSQL",
+  "description": "Personal Expense Manager Backend",
   "main": "index.ts",
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register src/index.ts",
@@ -11,15 +11,23 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@supabase/supabase-js": "^2.50.3",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.3",
+    "redis": "^4.7.1",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.25"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.9",
     "@types/express": "^5.0.3",
-    "@types/node": "^24.0.8",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.0.10",
     "@typescript-eslint/eslint-plugin": "^8.35.1",
     "@typescript-eslint/parser": "^8.35.1",
     "eslint": "^8.57.1",

@@ -14,7 +14,7 @@ const completeDatabaseURL = process.env.DATABASE_URL.replace(
 const config: PostgresConnectionOptions = {
   type: 'postgres',
   url: completeDatabaseURL,
-  synchronize: false,
+  synchronize: false, // TODO: use migrations from now on for any modifications
   entities: ['src/entities/*.ts'],
 };
 
