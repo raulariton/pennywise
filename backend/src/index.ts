@@ -5,6 +5,7 @@ import express from 'express';
 import dataSource from '@config/database';
 import authRoutes from '@routes/authRoutes';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -15,6 +16,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // middleware to parse cookies
 app.use(cookieParser());
+// CORS middleware to allow cross-origin requests
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}))
 
 // configure routes
 app.use('/auth', authRoutes);

@@ -5,6 +5,7 @@ import FormFooter from "@/components/molecules/FormFooter/FormFooter";
 import SocialAuthOptions from "@/components/molecules/SocialAuthOptions/SocialAuthOptions";
 import TabSwitcher from "@/components/molecules/TabSwitcher/TabSwitcher";
 import React, { useState } from "react";
+import axios from 'axios';
 
 export default function AuthCard() {
   const [isActive, setIsActive] = useState<"Login" | "Register">("Login");
@@ -24,9 +25,41 @@ export default function AuthCard() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(`${isActive} submitted:`, formData);
+
+    // check that password and confirmPassword match
+    // TODO: better looking error
+    if (isRegister && formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    const url = isRegister ? "http://localhost:8000/auth/register" : "http://localhost:8000/auth/login";
+
+    const body = {
+      email: formData.email,
+      password: formData.password,
+      ...(isRegister && {fullName: formData.fullName}),
+    }
+
+    try {
+      const response = await axios.post(url, body, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      alert("Authentication successful!");
+
+      // TODO: update auth context
+
+      // TODO: redirect to dashboard
+
+
+    } catch (error) {
+      alert("Authentication error:" + error);
+    }
   };
 
   return (
