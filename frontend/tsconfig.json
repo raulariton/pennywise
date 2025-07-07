@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2024",
+    "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -19,12 +19,6 @@
       }
     ],
     "paths": {
-      "@atoms/*": ["./src/components/atoms/*"],
-      "@molecules/*": ["./src/components/molecules/*"],
-      "@organisms/*": ["./src/components/organisms/*"],
-      "@templates/*": ["./src/components/templates/*"],
-      "@pages/*": ["./src/components/pages/*"],
-      "@components/*": ["./src/components/*"],
       "@/*": ["./src/*"]
     }
   },
