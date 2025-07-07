@@ -25,6 +25,44 @@ dataSource
     const server = app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
+
+    // enable port reusing
+    server.on('listening', () => {
+      server.setMaxListeners(0);
+    });
+
+    // handle graceful shutdown
+    process.on('SIGTERM', () => {
+      server.close(() => {
+        console.log('Server terminated gracefully...');
+        dataSource
+          .destroy()
+          .then(() => {
+            console.log('Database connection closed.');
+            process.exit(0);
+          })
+          .catch((err) => {
+            console.error('Error closing database connection:', err);
+            process.exit(1);
+          });
+      });
+    });
+
+    process.on('SIGINT', () => {
+      server.close(() => {
+        console.log('Server interrupted, shutting down...');
+        dataSource
+          .destroy()
+          .then(() => {
+            console.log('Database connection closed.');
+            process.exit(0);
+          })
+          .catch((err) => {
+            console.error('Error closing database connection:', err);
+            process.exit(1);
+          });
+      });
+    });
   })
   .catch((err) => {
     console.error('Error during Data Source initialization:', err);
