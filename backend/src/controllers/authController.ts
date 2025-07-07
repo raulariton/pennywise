@@ -1,8 +1,7 @@
-import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
-import { UserController } from '@controllers/userController';
 import { User } from '@entities/User';
-import { JWTController } from '@controllers/jwtController';
+import * as userServices from '@services/userServices';
+import { createToken } from '@services/jwt';
 import { createClient } from 'redis';
 import jwt from 'jsonwebtoken';
 
@@ -17,7 +16,7 @@ export class AuthController {
   static async login(req: Request, res: Response): Promise<void> {
     // check if email and password are correct
     const { email, password: plainTextPassword } = req.body;
-    const user = await UserController.authenticateUser(email, plainTextPassword);
+    const user = await userServices.authenticateUser(email, plainTextPassword);
 
     if (!user) {
       res.status(401).json({ error: 'Invalid email or password.' });
@@ -25,8 +24,8 @@ export class AuthController {
     }
 
     // create tokens
-    const accessToken = JWTController.createToken(user.email, user.id, 'access');
-    const refreshToken = JWTController.createToken(user.email, user.id, 'refresh');
+    const accessToken = createToken(user.email, user.id, 'access');
+    const refreshToken = createToken(user.email, user.id, 'refresh');
 
     // set refresh token in cookies
     res.cookie('refreshToken', refreshToken, {
@@ -51,13 +50,13 @@ export class AuthController {
     const { email, password: plainTextPassword } = req.body;
 
     // check if user with same email already exists
-    if (await UserController.getUserByEmail(email)) {
+    if (await userServices.getUserByEmail(email)) {
       res.status(409).json({ error: 'User with this email already exists.' });
       return;
     }
 
     // create user object
-    const user = await UserController.createUser(
+    const user = await userServices.createUser(
       Object.assign(new User(), {
         email: email,
         password: plainTextPassword,
@@ -71,8 +70,8 @@ export class AuthController {
     }
 
     // create tokens
-    const accessToken = JWTController.createToken(user.email, user.id, 'access');
-    const refreshToken = JWTController.createToken(user.email, user.id, 'refresh');
+    const accessToken = createToken(user.email, user.id, 'access');
+    const refreshToken = createToken(user.email, user.id, 'refresh');
 
     // set refresh token in cookies
     res.cookie('refreshToken', refreshToken, {
