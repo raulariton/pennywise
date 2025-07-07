@@ -17,6 +17,7 @@ const refreshTokenExpiration = '7d'; // 7 days
 export const createToken = (
   email: string,
   userId: string,
+  name: string,
   tokenType: 'access' | 'refresh',
 ): string => {
   // set expiration time based on token type
@@ -27,6 +28,7 @@ export const createToken = (
   const payload = {
     id: userId,
     email: email,
+    fullName: name,
   };
 
   // sign the token

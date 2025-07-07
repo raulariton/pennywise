@@ -17,7 +17,7 @@ export class JWTController {
     if (!decoded) return;
 
     // create a new access token
-    const newAccessToken = createToken(decoded.email, decoded.id, 'access');
+    const newAccessToken = createToken(decoded.email, decoded.id, decoded.fullName, 'access');
 
     // return the new access token
     res.status(200).json({ accessToken: newAccessToken });

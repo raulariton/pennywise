@@ -24,8 +24,8 @@ export class AuthController {
     }
 
     // create tokens
-    const accessToken = createToken(user.email, user.id, 'access');
-    const refreshToken = createToken(user.email, user.id, 'refresh');
+    const accessToken = createToken(user.email, user.id, user.name, 'access');
+    const refreshToken = createToken(user.email, user.id, user.name, 'refresh');
 
     // set refresh token in cookies
     res.cookie('refreshToken', refreshToken, {
@@ -47,7 +47,7 @@ export class AuthController {
    * Registers a new user in the database.
    */
   static async register(req: Request, res: Response): Promise<void> {
-    const { email, password: plainTextPassword } = req.body;
+    const { fullName, email, password: plainTextPassword } = req.body;
 
     // check if user with same email already exists
     if (await userServices.getUserByEmail(email)) {
@@ -60,6 +60,7 @@ export class AuthController {
       Object.assign(new User(), {
         email: email,
         password: plainTextPassword,
+        name: fullName,
       }),
     );
 
@@ -70,8 +71,8 @@ export class AuthController {
     }
 
     // create tokens
-    const accessToken = createToken(user.email, user.id, 'access');
-    const refreshToken = createToken(user.email, user.id, 'refresh');
+    const accessToken = createToken(user.email, user.id, user.name, 'access');
+    const refreshToken = createToken(user.email, user.id, user.name, 'refresh');
 
     // set refresh token in cookies
     res.cookie('refreshToken', refreshToken, {
