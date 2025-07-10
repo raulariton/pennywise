@@ -31,7 +31,16 @@ export class AuthController {
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // use secure cookies in production
-      sameSite: 'strict',
+
+      /**
+       * 'strict': for the server to receive cookies only from the same site
+       * 'lax': for the server to receive cookies from the same site and top-level navigations
+       * 'none': for the server to receive cookies from any site
+       * i set it to 'none' since the frontend and backend are on different domains
+       * but any other cookies that the backend doesn't need from the frontend
+       * should be set to 'strict' or 'lax' to prevent CSRF attacks
+       */
+      sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
