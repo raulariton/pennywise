@@ -1,15 +1,16 @@
+import {ReactNode} from 'react';
 
-
-export default function DashboardTemplate() {
+export default function PageTemplate({children}: { children: ReactNode }) {
 	return (
-		<div>
-		{/*	sidebar */}
-		{/*	hero section? */}
-			<div className="flex flex-col items-center justify-center h-screen bg-gray-800">
-				<h1 className="text-4xl font-bold font-eudoxus-sans mb-4">Dashboard</h1>
-				<p className="text-lg text-gray-200">This is the dashboard.</p>
+		<>
+			<nav>
+				{/*	sidebar */}
+			</nav>
+			<div className="flex flex-col h-screen">
+				<main className="flex-1 p-4">
+					{children}
+				</main>
 			</div>
-		{/*	main section, divided into tiles, graphics, etc.? */}
-		</div>
+		</>
 	)
 }
