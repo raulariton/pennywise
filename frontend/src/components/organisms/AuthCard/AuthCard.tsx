@@ -2,14 +2,17 @@
 import AuthButton from "@/components/atoms/AuthButton/AuthButton";
 import AuthFormFields from "@/components/molecules/AuthFormFields/AuthFormFields";
 import FormFooter from "@/components/molecules/FormFooter/FormFooter";
-import SocialAuthOptions from "@/components/molecules/SocialAuthOptions/SocialAuthOptions";
 import TabSwitcher from "@/components/molecules/TabSwitcher/TabSwitcher";
 import React, { useState } from "react";
-import axios from 'axios';
+import apiClient from "@/utils/apiClient";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function AuthCard() {
   const [isActive, setIsActive] = useState<"Login" | "Register">("Login");
   const isRegister = isActive === "Register";
+	const auth = useAuth();
+	const router = useRouter();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -35,7 +38,8 @@ export default function AuthCard() {
       return;
     }
 
-    const url = isRegister ? "http://localhost:8000/auth/register" : "http://localhost:8000/auth/login";
+    const apiRoute =
+			isRegister ? "/auth/register" : "/auth/login";
 
     const body = {
       email: formData.email,
@@ -44,17 +48,18 @@ export default function AuthCard() {
     }
 
     try {
-      const response = await axios.post(url, body, {
+      const response = await apiClient.post(apiRoute, body, {
         headers: {
           'Content-Type': 'application/json',
         },
+				withCredentials: true, // allows receiving cookies from the server
       })
 
-      alert("Authentication successful!");
+      // update auth context
+			auth.login(response.data.accessToken);
 
-      // TODO: update auth context
-
-      // TODO: redirect to dashboard
+      // redirect to dashboard
+			router.replace("/dashboard");
 
 
     } catch (error) {
