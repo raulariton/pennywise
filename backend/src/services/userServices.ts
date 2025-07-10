@@ -36,7 +36,6 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 }
 
 export async function createUser(user: User): Promise<User | null> {
-
   // update user password to hashed version
   user.password = await bcrypt.hash(user.password, 10);
 
@@ -57,18 +56,23 @@ export async function authenticateUser(
   email: string,
   plainTextPassword: string,
 ): Promise<User | null> {
+  // NOTE: the row information (the user) is returned by `getUserByEmail`
+  //  (if a user with the provided email exists),
+  //  and then, using bcrypt, the provided password is compared
+  //  with the stored hashed password (no fetching of the password is done here).
+  //  either way, frontend receives the same message if the user is not found
+  //  or the password is incorrect.
+
   // find user by email
   const user = await getUserByEmail(email);
 
   // check if user exists
   if (!user) {
-    console.error('User not found');
     return null;
   }
 
   // compare the provided password with the stored hashed password
   if (!(await bcrypt.compare(plainTextPassword, user.password))) {
-    console.error('Invalid password');
     return null;
   }
 
