@@ -1,15 +1,43 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Geist Sans';
+  font-style: normal;
+  src: url('../assets/fonts/GeistVariableFont.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Eudoxus Sans';
+  font-style: normal;
+  src: url('../assets/fonts/EudoxusSansVariable.woff2') format('woff2');
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+@layer base {
+    button:not([disabled]),
+    [role="button"]:not([disabled]) {
+        cursor: pointer;
+    }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--color-cyan-500);
+
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-geist-sans: 'Geist Sans', sans-serif;
+  --font-eudoxus-sans: 'Eudoxus Sans', sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +50,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
