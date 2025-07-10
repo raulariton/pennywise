@@ -1,6 +1,6 @@
 // components/molecules/HeroSideBlock.jsx
 
-import Button from "@/components/atoms/Button/Button";
+import GetStartedButton from "@/components/atoms/GetStartedButton/GetStartedButton";
 import GradientText from "@/components/atoms/GradientText/GradientText";
 
 export default function HeroSideBlock({ text }: { text: string }) {
@@ -8,7 +8,7 @@ export default function HeroSideBlock({ text }: { text: string }) {
     <div className="max-w-xs">
       <GradientText>{text}</GradientText>
       <div className="mt-10">
-        <Button />
+        <GetStartedButton />
       </div>
     </div>
   );
