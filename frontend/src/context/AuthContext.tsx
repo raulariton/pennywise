@@ -1,35 +1,39 @@
-"use client";
-import React, { createContext, useContext, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+'use client';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import apiClient from '@/utils/apiClient';
+import useRefreshToken from '@/hooks/useRefreshToken';
 
-interface JWTPayload {
-	id: string;
-	email: string;
-	fullName: string;
+export interface JWTPayload {
+  id: string;
+  email: string;
+  fullName: string;
 }
 
 interface AuthContextType {
-	isAuthenticated: boolean;
-	accessToken: string | null;
-	userID: string | null;
-	userEmail: string | null;
-	userFullName: string | null;
-	login: (token: string) => void;
-	logout: () => void;
+  isAuthenticated: boolean;
+  isInitialized: boolean;
+  accessToken: string | null;
+  userID: string | null;
+  userEmail: string | null;
+  userFullName: string | null;
+  login: (token: string) => void;
+  logout: () => void;
 }
 
 interface AuthProviderProps {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }
 
-const AuthContext= createContext<AuthContextType>({
+const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
+  isInitialized: false,
   accessToken: null,
   userID: null,
   userEmail: null,
   userFullName: null,
-	login: () => {},
-	logout: () => {},
+  login: () => {},
+  logout: () => {},
 });
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -38,6 +42,31 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userID, setUserID] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userFullName, setUserFullName] = useState<string | null>(null);
+  const { refresh } = useRefreshToken();
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
+
+  // Handle initialization of authentication state
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        // Try to refresh the token on initial load
+        console.log("Attempting to refresh token on initialization...");
+        await refresh();
+      } catch (error) {
+        // TODO: redirect to landing
+        console.error('Failed to refresh token:', error);
+      } finally {
+        setIsInitialized(true);
+      }
+    };
+
+    console.log("isInitialized: ", isInitialized);
+
+    // if not initialized, initialize
+    if (!isInitialized) {
+      initAuth();
+    }
+  }, []);
 
   /**
    * Update authentication state after successful login or registration.
@@ -47,9 +76,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // set in-memory state
     setAccessToken(token);
 
+    console.log('Access token set in state:', token);
+
     // decode token to extract user information
     try {
-      const decodedToken: JWTPayload = jwtDecode(token);
+      const decodedToken: JWTPayload = jwtDecode<JWTPayload>(token);
 
       setUserEmail(decodedToken.email);
       setUserID(decodedToken.id);
@@ -57,34 +88,39 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setIsAuthenticated(true);
 
       // DEBUG
-      console.log("User authenticated.");
+      console.log('User authenticated.');
     } catch (error) {
-      console.error("Failed to decode access token:", error);
+      alert('Failed to decode access token. Please log in again.');
+      console.error('Failed to decode access token:', error);
       logout();
     }
-  }
+  };
 
   /**
    * Clear/Reset authentication state on logout.
    */
-  const logout = () => {
+  const logout = async () => {
+    // call request to logout endpoint
+    // to remove refresh token from cookies
+    await apiClient.post('/auth/logout');
     setIsAuthenticated(false);
     setAccessToken(null);
     setUserEmail(null);
     setUserID(null);
     setUserFullName(null);
-  }
+  };
 
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
-				accessToken,
+        isInitialized,
+        accessToken,
         userID,
         userEmail,
         userFullName,
         login,
-        logout
+        logout,
       }}
     >
       {children}

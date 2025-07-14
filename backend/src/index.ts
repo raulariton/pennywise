@@ -25,6 +25,12 @@ app.use(cors({
 // configure routes
 app.use('/auth', authRoutes);
 
+// test route
+// TODO: remove
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Welcome to the backend server!' });
+});
+
 dataSource
   .initialize()
   .then(async () => {

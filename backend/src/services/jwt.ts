@@ -48,6 +48,7 @@ export const verifyToken = async (
   // select the secret based on token type
   const secret: string = tokenType === 'access' ? accessTokenSecret : refreshTokenSecret;
 
+  /*
   if (tokenType === 'refresh') {
     // check if the token is valid using the bal
     const redisClient = createClient();
@@ -70,6 +71,7 @@ export const verifyToken = async (
       return;
     }
   }
+   */
 
   try {
     // verify the token, and return the decoded payload
@@ -79,7 +81,7 @@ export const verifyToken = async (
       res.status(403).json({ error: `Invalid ${tokenType} token: ${error}` });
       return;
     }
-    // TODO: maybe don't throw an error here, just return undefined
+    // TODO: don't throw an error here, just return undefined
     throw new Error(`Invalid ${tokenType} token: ${error}`);
   }
 };
