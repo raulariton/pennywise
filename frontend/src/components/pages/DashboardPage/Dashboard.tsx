@@ -11,8 +11,8 @@ export default function DashboardPage() {
   const router = useRouter();
   const apiClientPrivate = useApiClientPrivate();
 
-  const handleLogout = () => {
-    auth.logout();
+  const handleLogout = async () => {
+    await auth.logout();
     router.replace('/');
     alert('You have been logged out.');
   };

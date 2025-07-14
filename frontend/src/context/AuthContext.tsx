@@ -2,7 +2,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import apiClient from '@/utils/apiClient';
-import useRefreshToken from '@/hooks/useRefreshToken';
+import { useRouter } from 'next/navigation';
+import axios, { AxiosError } from 'axios';
 
 export interface JWTPayload {
   id: string;
@@ -19,6 +20,7 @@ interface AuthContextType {
   userFullName: string | null;
   login: (token: string) => void;
   logout: () => void;
+  refreshToken: () => Promise<string | null>;
 }
 
 interface AuthProviderProps {
@@ -34,6 +36,7 @@ const AuthContext = createContext<AuthContextType>({
   userFullName: null,
   login: () => {},
   logout: () => {},
+  refreshToken: async () => null,
 });
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -42,31 +45,51 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userID, setUserID] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userFullName, setUserFullName] = useState<string | null>(null);
-  const { refresh } = useRefreshToken();
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
+  const router = useRouter();
 
+
+  /**
+   * Refreshes the access token using the refresh token cookie
+   * @return The new access token if successful, or null if failed.
+   */
+  const refreshToken = async () => {
+    try {
+      // Make API call to refresh token
+      const response = await apiClient.get('/auth/refresh');
+      
+      // Update authentication state with new token
+      login(response.data.accessToken);
+
+      return response.data.accessToken;
+    } catch (error: unknown | AxiosError) {
+      if (axios.isAxiosError(error) && error.response?.status !== 401) {
+        console.log("Error refreshing token:", error);
+      }
+      return null;
+    }
+  };
+  
   // Handle initialization of authentication state
   useEffect(() => {
     const initAuth = async () => {
       try {
-        // Try to refresh the token on initial load
-        console.log("Attempting to refresh token on initialization...");
-        await refresh();
+        // obtain access token using refresh token
+        await refreshToken();
       } catch (error) {
-        // TODO: redirect to landing
         console.error('Failed to refresh token:', error);
+        router.replace("/");
       } finally {
         setIsInitialized(true);
       }
     };
 
-    console.log("isInitialized: ", isInitialized);
 
     // if not initialized, initialize
     if (!isInitialized) {
       initAuth();
     }
-  }, []);
+  }, [isInitialized]);
 
   /**
    * Update authentication state after successful login or registration.
@@ -75,8 +98,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = (token: string) => {
     // set in-memory state
     setAccessToken(token);
-
-    console.log('Access token set in state:', token);
 
     // decode token to extract user information
     try {
@@ -87,11 +108,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUserFullName(decodedToken.fullName);
       setIsAuthenticated(true);
 
-      // DEBUG
-      console.log('User authenticated.');
     } catch (error) {
-      alert('Failed to decode access token. Please log in again.');
       console.error('Failed to decode access token:', error);
+      alert('Failed to decode access token. Please log in again.');
       logout();
     }
   };
@@ -102,7 +121,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = async () => {
     // call request to logout endpoint
     // to remove refresh token from cookies
-    await apiClient.post('/auth/logout');
+    await apiClient.get('/auth/logout');
     setIsAuthenticated(false);
     setAccessToken(null);
     setUserEmail(null);
@@ -121,6 +140,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         userFullName,
         login,
         logout,
+        refreshToken,
       }}
     >
       {children}

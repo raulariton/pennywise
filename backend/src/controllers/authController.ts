@@ -40,7 +40,7 @@ export class AuthController {
        * but any other cookies that the backend doesn't need from the frontend
        * should be set to 'strict' or 'lax' to prevent CSRF attacks
        */
-      sameSite: 'none',
+      sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 

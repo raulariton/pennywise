@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import useRefreshToken from '@/hooks/useRefreshToken';
 import { useAuth } from '@/context/AuthContext';
 
 const publicPaths = ['/', '/authentication']; // Add any public paths here
@@ -12,9 +11,7 @@ export const AuthInitializer = ({ children }: { children: React.ReactNode }) => 
   const pathname = usePathname();
 
   useEffect(() => {
-    console.log("REDIRECTOR TRIGGERED");
-    console.log("isAuthenticated:", isAuthenticated);
-    console.log("isInitialized:", isInitialized);
+    // this runs everytime the user navigates to a new page
     if (isInitialized) {
       if (isAuthenticated) {
         // if user is authenticated and trying to access a public page
@@ -31,7 +28,10 @@ export const AuthInitializer = ({ children }: { children: React.ReactNode }) => 
         }
       }
     }
-  }, [isAuthenticated, isInitialized, pathname, router]);
+  }, [isInitialized, pathname, router]);
+  // NOTE: potential issues because `isAuthenticated` is not included in the dependency array
+  //  however if i include it, on logout, the user is redirected to the authentication page,
+  //  when they should be redirected to the home (landing) page instead
 
   // Show loading state or children based on authentication status
   if (!isInitialized || (isAuthenticated && publicPaths.includes(pathname))) {

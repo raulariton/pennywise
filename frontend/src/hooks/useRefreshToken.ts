@@ -1,23 +1,12 @@
-import apiClient from '@/utils/apiClient';
 import { useAuth } from '@/context/AuthContext';
 
+// NOTE: this hook is a wrapper around the `refreshToken` method from AuthContext
+//  not sure whether to keep it this way or not. it would require refactoring of the method calls
 const useRefreshToken = () => {
-  const { login } = useAuth();
+  const auth = useAuth();
 
   const refresh = async () => {
-    try {
-      // NOTE: we use the non-protected api client because we don't
-      //  need an access token to access the refresh endpoint.
-      const response = await apiClient.get('/auth/refresh');
-
-      // update the authentication context with the new access token
-      login(response.data.accessToken);
-
-      return response.data.accessToken;
-    } catch (error) {
-      // TODO: better error handling
-      console.error('Failed to refresh access token:', error);
-    }
+    return auth.refreshToken();
   };
 
   return { refresh };

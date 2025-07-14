@@ -8,7 +8,7 @@ export class JWTController {
     const refreshToken = req.cookies?.refreshToken;
 
     if (!refreshToken) {
-      res.sendStatus(401).json({ error: 'No refresh token provided.' });
+      res.status(401).json({ error: 'No refresh token provided.' });
       return;
     }
 
