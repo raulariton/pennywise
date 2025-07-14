@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import LogoLoader from '@/components/organisms/LogoLoader';
 
 const publicPaths = ['/', '/authentication']; // Add any public paths here
 
@@ -35,7 +36,7 @@ export const AuthInitializer = ({ children }: { children: React.ReactNode }) => 
 
   // Show loading state or children based on authentication status
   if (!isInitialized || (isAuthenticated && publicPaths.includes(pathname))) {
-    return <div>Loading...</div>; // You can replace this with a proper loading component
+    return <LogoLoader />;
   }
 
   return <>{children}</>;
