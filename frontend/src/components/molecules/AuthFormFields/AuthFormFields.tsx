@@ -11,12 +11,19 @@ type AuthFormFieldsProps = {
     confirmPassword: string;
     fullName: string;
   };
+  formErrors: {
+    email: string;
+    password: string;
+    confirmPassword: string;
+    fullName: string;
+  }
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export default function AuthFormFields({
   isRegister,
   formData,
+  formErrors,
   handleInputChange,
 }: AuthFormFieldsProps) {
   return (
@@ -31,6 +38,7 @@ export default function AuthFormFields({
             value={formData.fullName}
             onChange={handleInputChange}
             placeholder="Enter your full name"
+            error={formErrors.fullName}
           />
         </div>
       )}
@@ -44,6 +52,7 @@ export default function AuthFormFields({
           value={formData.email}
           onChange={handleInputChange}
           placeholder="Enter your email"
+          error={formErrors.email}
         />
       </div>
 
@@ -56,6 +65,7 @@ export default function AuthFormFields({
           value={formData.password}
           onChange={handleInputChange}
           placeholder="Enter your password"
+          error={formErrors.password}
         />
       </div>
 
@@ -69,6 +79,7 @@ export default function AuthFormFields({
             value={formData.confirmPassword}
             onChange={handleInputChange}
             placeholder="Confirm your password"
+            error={formErrors.confirmPassword}
           />
         </div>
       )}

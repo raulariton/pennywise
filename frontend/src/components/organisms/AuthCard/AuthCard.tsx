@@ -7,6 +7,8 @@ import React, { useState } from "react";
 import apiClient from "@/utils/apiClient";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { isAxiosError } from 'axios';
+import { toast } from 'sonner';
 
 export default function AuthCard() {
   const [isActive, setIsActive] = useState<"Login" | "Register">("Login");
@@ -21,10 +23,23 @@ export default function AuthCard() {
     fullName: "",
   });
 
+  const [formErrors, setFormErrors] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    fullName: "",
+  });
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    });
+
+    // clear error message on respective input field
+    setFormErrors({
+      ...formErrors,
+      [e.target.name]: "",
     });
   };
 
@@ -32,9 +47,11 @@ export default function AuthCard() {
     e.preventDefault();
 
     // check that password and confirmPassword match
-    // TODO: better looking error
     if (isRegister && formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
+      setFormErrors({
+        ...formErrors,
+        confirmPassword: "Passwords do not match",
+      })
       return;
     }
 
@@ -63,7 +80,19 @@ export default function AuthCard() {
 
 
     } catch (error) {
-      alert("Authentication error:" + error);
+      if (isAxiosError(error)) {
+        if (error.status === 401) {
+          toast.error("Invalid email or password.");
+        } else if (error.status === 409) {
+          // user already exists
+          setFormErrors({
+            ...formErrors,
+            email: "Email already exists",
+          });
+        } else if (error.status === 500) {
+          toast.error("Internal server error. Please try again later.");
+        }
+      }
     }
   };
 
@@ -76,6 +105,7 @@ export default function AuthCard() {
           isRegister={isRegister}
           formData={formData}
           handleInputChange={handleInputChange}
+          formErrors={formErrors}
         />
 
         {isActive === "Login" && (
