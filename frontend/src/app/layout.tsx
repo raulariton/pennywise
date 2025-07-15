@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import AuthInitializer from "@/components/utils/AuthInitializer/AuthInitializer";
+import { Toaster } from '@/components/ui/sonner';
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +32,12 @@ export default function RootLayout({
         <AuthProvider>
           <AuthInitializer>
             {children}
+            <Toaster
+              position="top-center"
+              style={{
+                fontFamily: 'var(--font-geist-sans)',
+              }}
+            />
           </AuthInitializer>
         </AuthProvider>
       </body>

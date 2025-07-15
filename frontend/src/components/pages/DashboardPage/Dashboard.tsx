@@ -5,16 +5,18 @@ import { useAuth, JWTPayload } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import useApiClientPrivate from '@/hooks/useApiClientPrivate';
+import { useToast } from '@/hooks/useToast';
 
 export default function DashboardPage() {
   const auth = useAuth();
   const router = useRouter();
   const apiClientPrivate = useApiClientPrivate();
+  const toast = useToast();
 
   const handleLogout = async () => {
     await auth.logout();
     router.replace('/');
-    alert('You have been logged out.');
+    toast.success('You have logged out successfully.');
   };
 
   const makeProtectedRequest = async () => {

@@ -77,11 +77,7 @@ export const verifyToken = async (
     // verify the token, and return the decoded payload
     return jwt.verify(token, secret) as JwtPayload;
   } catch (error) {
-    if (res) {
-      res.status(403).json({ error: `Invalid ${tokenType} token: ${error}` });
-      return;
-    }
-    // TODO: don't throw an error here, just return undefined
-    throw new Error(`Invalid ${tokenType} token: ${error}`);
+    res.status(403).json({ error: `Invalid ${tokenType} token: ${error}` });
+    return;
   }
 };

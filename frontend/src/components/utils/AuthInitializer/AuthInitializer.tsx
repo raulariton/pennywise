@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import LogoLoader from '@/components/organisms/LogoLoader';
+import { useToast } from '@/hooks/useToast';
 
 const publicPaths = ['/', '/authentication']; // Add any public paths here
 
@@ -10,6 +11,7 @@ export const AuthInitializer = ({ children }: { children: React.ReactNode }) => 
   const { isAuthenticated, isInitialized } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const toast = useToast();
 
   useEffect(() => {
     // this runs everytime the user navigates to a new page
@@ -25,7 +27,7 @@ export const AuthInitializer = ({ children }: { children: React.ReactNode }) => 
         if (!publicPaths.includes(pathname)) {
           // redirect to authentication page
           router.push('/authentication');
-          // TODO: add a modal or notification to inform the user they need to log in
+          toast.warning('You need to be logged in to access this page.')
         }
       }
     }

@@ -4,6 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import apiClient from '@/utils/apiClient';
 import { useRouter } from 'next/navigation';
 import axios, { AxiosError } from 'axios';
+import useToast from '@/hooks/useToast';
 
 export interface JWTPayload {
   id: string;
@@ -47,6 +48,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userFullName, setUserFullName] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const router = useRouter();
+  const toast = useToast();
 
 
   /**
@@ -65,6 +67,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } catch (error: unknown | AxiosError) {
       if (axios.isAxiosError(error) && error.response?.status !== 401) {
         console.log("Error refreshing token:", error);
+      } else if (axios.isAxiosError(error) && error.response?.status === 403) {
+        // 403 is thrown when the refresh token is invalid or expired
+        toast.error("Session expired. Please log in again.");
       }
       return null;
     }
