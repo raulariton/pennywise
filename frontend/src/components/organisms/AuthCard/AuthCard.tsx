@@ -9,6 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { isAxiosError } from 'axios';
 import { toast } from 'sonner';
+import ForgotPasswordDialog from '@/components/molecules/ForgotPasswordDialog';
 
 export default function AuthCard() {
   const [isActive, setIsActive] = useState<"Login" | "Register">("Login");
@@ -109,14 +110,7 @@ export default function AuthCard() {
         />
 
         {isActive === "Login" && (
-          <div className="text-right">
-            <button
-              type="button"
-              className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors duration-200"
-            >
-              Forgot password?
-            </button>
-          </div>
+          <ForgotPasswordDialog/>
         )}
 
         <AuthButton>

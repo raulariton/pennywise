@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@next/env": "^15.3.5",
+    "@radix-ui/react-dialog": "^1.1.14",
     "@splinetool/react-spline": "^4.0.0",
     "axios": "^1.10.0",
     "class-variance-authority": "^0.7.1",
