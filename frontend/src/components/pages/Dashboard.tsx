@@ -1,6 +1,6 @@
 'use client';
 
-import PageTemplate from '@/components/templates/DashboardTemplate/PageTemplate';
+import PageTemplate from '@/components/templates/PageTemplate';
 import { useAuth, JWTPayload } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';

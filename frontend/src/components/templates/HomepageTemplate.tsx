@@ -1,4 +1,4 @@
-import HeroSection from '@/components/organisms/HeroSection/HeroSection';
+import HeroSection from '@/components/organisms/HeroSection';
 
 export default function HomepageTemplate() {
   return (

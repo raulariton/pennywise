@@ -1,8 +1,8 @@
 'use client';
-import AuthButton from '@/components/atoms/AuthButton/AuthButton';
-import AuthFormFields from '@/components/molecules/AuthFormFields/AuthFormFields';
-import FormFooter from '@/components/molecules/FormFooter/FormFooter';
-import TabSwitcher from '@/components/molecules/TabSwitcher/TabSwitcher';
+import AuthButton from '@/components/atoms/AuthButton';
+import AuthFormFields from '@/components/molecules/AuthFormFields';
+import FormFooter from '@/components/molecules/FormFooter';
+import TabSwitcher from '@/components/molecules/TabSwitcher';
 import React, { useState } from 'react';
 import apiClient from '@/utils/apiClient';
 import { useAuth } from '@/context/AuthContext';

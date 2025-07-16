@@ -1,4 +1,4 @@
-import Authentication from '@/components/pages/Authentication/Authentication';
+import Authentication from '@/components/pages/Authentication';
 import React from 'react';
 
 const index = () => {

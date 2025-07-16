@@ -1,6 +1,6 @@
 'use client';
-import GradientBackgroundBlob from '@/components/atoms/GradientBackground/GradientBackground';
-import AuthCard from '@/components/organisms/AuthCard/AuthCard';
+import GradientBackgroundBlob from '@/components/atoms/GradientBackground';
+import AuthCard from '@/components/organisms/AuthCard';
 import React from 'react';
 
 export default function Authentication() {

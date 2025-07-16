@@ -1,5 +1,5 @@
 'use client';
-import TabButton from '@/components/atoms/TabButton/TabButton';
+import TabButton from '@/components/atoms/TabButton';
 import React from 'react';
 
 type TabSwitcherProps = {

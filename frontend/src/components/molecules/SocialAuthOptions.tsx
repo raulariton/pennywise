@@ -1,5 +1,5 @@
 "use client";
-import SocialButton from "@/components/atoms/SocialButton/SocialButton";
+import SocialButton from "@/components/atoms/SocialButton";
 import React from "react";
 import { FaGoogle, FaApple } from "react-icons/fa";
 

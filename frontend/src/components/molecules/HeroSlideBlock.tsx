@@ -1,5 +1,5 @@
-import GetStartedButton from '@/components/atoms/GetStartedButton/GetStartedButton';
-import GradientText from '@/components/atoms/GradientText/GradientText';
+import GetStartedButton from '@/components/atoms/GetStartedButton';
+import GradientText from '@/components/atoms/GradientText';
 
 export default function HeroSideBlock({ text }: { text: string }) {
   return (

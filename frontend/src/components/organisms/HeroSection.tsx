@@ -1,5 +1,5 @@
 // components/sections/HeroSection.tsx
-import GetStartedButton from '@/components/atoms/GetStartedButton/GetStartedButton';
+import GetStartedButton from '@/components/atoms/GetStartedButton';
 import Spline from '@splinetool/react-spline';
 import Image from 'next/image';
 

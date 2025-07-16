@@ -1,6 +1,6 @@
 'use client';
-import InputField from '@/components/atoms/InputField/InputField';
-import Label from '@/components/atoms/Label/Label';
+import InputField from '@/components/atoms/InputField';
+import Label from '@/components/atoms/Label';
 import React from 'react';
 
 type AuthFormFieldsProps = {
