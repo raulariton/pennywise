@@ -88,7 +88,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const initAuth = async () => {
       try {
         // get access token using refresh token
-        await refreshToken();
+        const token = await refreshToken();
+
+        if (!token) {
+          setIsAuthenticated(false);
+        }
+
+        if (token) {
+          login(token)
+        }
       } catch (error) {
         console.error('Failed to refresh token:', error);
         router.replace('/');
@@ -138,6 +146,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUserEmail(null);
     setUserID(null);
     setUserFullName(null);
+
+    router.replace('/');
+    toast.success('You have logged out successfully.');
   };
 
   return (

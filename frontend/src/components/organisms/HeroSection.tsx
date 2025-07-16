@@ -1,7 +1,7 @@
-// components/sections/HeroSection.tsx
 import GetStartedButton from '@/components/atoms/GetStartedButton';
 import Spline from '@splinetool/react-spline';
 import Image from 'next/image';
+import Logo from '@/components/atoms/Logo';
 
 export default function HeroSection() {
   return (
@@ -13,13 +13,7 @@ export default function HeroSection() {
 
       {/* logo on top left */}
       <div className="absolute top-4 left-4 z-10">
-        <Image
-          src="full-logo-white.svg"
-          alt="Logo"
-          width={200}
-          height={50}
-          className="h-8 w-auto"
-        />
+        <Logo size={'sm'}/>
       </div>
 
       {/* Hero Content */}
