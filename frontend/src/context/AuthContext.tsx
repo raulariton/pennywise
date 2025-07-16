@@ -49,6 +49,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const router = useRouter();
   const toast = useToast();
+  const [error, setError] = useState<string>('');
+
+  // NOTE: without using a useEffect to render toasts,
+  //  they will not show up
+  useEffect(() => {
+    if (error) {
+      toast.error(error)
+    }
+  }, [error, toast]);
 
   /**
    * Refreshes the access token using the refresh token cookie
@@ -65,10 +74,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return response.data.accessToken;
     } catch (error: unknown | AxiosError) {
       if (axios.isAxiosError(error) && error.response?.status !== 401) {
-        console.log('Error refreshing token:', error);
+        setError('Server error. Please try again later.');
       } else if (axios.isAxiosError(error) && error.response?.status === 403) {
         // 403 is thrown when the refresh token is invalid or expired
-        toast.error('Session expired. Please log in again.');
+        setError('Session expired. Please log in again.');
       }
       return null;
     }
@@ -78,7 +87,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     const initAuth = async () => {
       try {
-        // obtain access token using refresh token
+        // get access token using refresh token
         await refreshToken();
       } catch (error) {
         console.error('Failed to refresh token:', error);

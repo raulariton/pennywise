@@ -91,6 +91,7 @@ export default function AuthCard() {
           toast.error('Internal server error. Please try again later.');
         }
       }
+      toast.error("An error occurred. Please try again later.");
     }
   };
 
