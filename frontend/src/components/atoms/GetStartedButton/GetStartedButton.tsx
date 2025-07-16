@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { FiArrowRight } from "react-icons/fi";
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { FiArrowRight } from 'react-icons/fi';
 
 const GetStartedButton = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.prefetch("/authentication");
+    router.prefetch('/authentication');
   }, [router]);
 
   return (

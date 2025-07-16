@@ -1,7 +1,6 @@
-// components/atoms/SubtitleText.tsx
 export default function SubtitleText({
   children,
-  className = "",
+  className = '',
 }: {
   children: string;
   className?: string;

@@ -1,12 +1,12 @@
-import Home from "@/components/pages/Home/Home";
-import React, {StrictMode} from "react";
+import Home from '@/components/pages/Home/Home';
+import React, { StrictMode } from 'react';
 
 const App = () => {
-	return (
-		<StrictMode>
-			<Home/>
-		</StrictMode>
-	);
+  return (
+    <StrictMode>
+      <Home />
+    </StrictMode>
+  );
 };
 
 export default App;

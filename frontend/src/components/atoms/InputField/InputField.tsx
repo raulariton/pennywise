@@ -1,4 +1,3 @@
-// components/atoms/InputField.tsx
 export default function InputField({
   type,
   name,

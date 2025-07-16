@@ -50,7 +50,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
   const toast = useToast();
 
-
   /**
    * Refreshes the access token using the refresh token cookie
    * @return The new access token if successful, or null if failed.
@@ -59,22 +58,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       // Make API call to refresh token
       const response = await apiClient.get('/auth/refresh');
-      
+
       // Update authentication state with new token
       login(response.data.accessToken);
 
       return response.data.accessToken;
     } catch (error: unknown | AxiosError) {
       if (axios.isAxiosError(error) && error.response?.status !== 401) {
-        console.log("Error refreshing token:", error);
+        console.log('Error refreshing token:', error);
       } else if (axios.isAxiosError(error) && error.response?.status === 403) {
         // 403 is thrown when the refresh token is invalid or expired
-        toast.error("Session expired. Please log in again.");
+        toast.error('Session expired. Please log in again.');
       }
       return null;
     }
   };
-  
+
   // Handle initialization of authentication state
   useEffect(() => {
     const initAuth = async () => {
@@ -83,12 +82,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         await refreshToken();
       } catch (error) {
         console.error('Failed to refresh token:', error);
-        router.replace("/");
+        router.replace('/');
       } finally {
         setIsInitialized(true);
       }
     };
-
 
     // if not initialized, initialize
     if (!isInitialized) {
@@ -112,7 +110,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUserID(decodedToken.id);
       setUserFullName(decodedToken.fullName);
       setIsAuthenticated(true);
-
     } catch (error) {
       console.error('Failed to decode access token:', error);
       alert('Failed to decode access token. Please log in again.');

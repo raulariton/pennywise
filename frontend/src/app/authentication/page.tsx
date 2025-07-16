@@ -1,5 +1,5 @@
-import Authentication from "@/components/pages/Authentication/Authentication";
-import React from "react";
+import Authentication from '@/components/pages/Authentication/Authentication';
+import React from 'react';
 
 const index = () => {
   return <Authentication />;

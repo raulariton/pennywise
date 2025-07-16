@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -27,7 +27,7 @@ export const AuthInitializer = ({ children }: { children: React.ReactNode }) => 
         if (!publicPaths.includes(pathname)) {
           // redirect to authentication page
           router.push('/authentication');
-          toast.warning('You need to be logged in to access this page.')
+          toast.warning('You need to be logged in to access this page.');
         }
       }
     }

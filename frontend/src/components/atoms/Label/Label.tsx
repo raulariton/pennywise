@@ -1,5 +1,5 @@
-"use client";
-import React from "react";
+'use client';
+import React from 'react';
 
 type LabelProps = {
   htmlFor?: string;
@@ -8,10 +8,7 @@ type LabelProps = {
 
 export default function Label({ htmlFor, children }: LabelProps) {
   return (
-    <label
-      htmlFor={htmlFor}
-      className="block text-sm font-medium text-gray-300 mb-2"
-    >
+    <label htmlFor={htmlFor} className="mb-2 block text-sm font-medium text-gray-300">
       {children}
     </label>
   );

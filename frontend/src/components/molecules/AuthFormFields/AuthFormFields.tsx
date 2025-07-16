@@ -1,7 +1,7 @@
-"use client";
-import InputField from "@/components/atoms/InputField/InputField";
-import Label from "@/components/atoms/Label/Label";
-import React from "react";
+'use client';
+import InputField from '@/components/atoms/InputField/InputField';
+import Label from '@/components/atoms/Label/Label';
+import React from 'react';
 
 type AuthFormFieldsProps = {
   isRegister: boolean;
@@ -16,7 +16,7 @@ type AuthFormFieldsProps = {
     password: string;
     confirmPassword: string;
     fullName: string;
-  }
+  };
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -30,7 +30,7 @@ export default function AuthFormFields({
     <div className="space-y-6">
       {/* Full Name (register only) */}
       {isRegister && (
-        <div className="space-y-4 animate-in slide-in-from-top-5 duration-300">
+        <div className="animate-in slide-in-from-top-5 space-y-4 duration-300">
           <Label>Full Name</Label>
           <InputField
             type="text"

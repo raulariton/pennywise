@@ -1,8 +1,8 @@
-import React from "react";
-import DashboardPage from "@/components/pages/DashboardPage/Dashboard";
+import React from 'react';
+import DashboardPage from '@/components/pages/DashboardPage/Dashboard';
 
 const index = () => {
-	return <DashboardPage />;
+  return <DashboardPage />;
 };
 
 export default index;

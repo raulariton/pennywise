@@ -20,10 +20,10 @@
 }
 
 @layer base {
-    button:not([disabled]),
-    [role="button"]:not([disabled]) {
-        cursor: pointer;
-    }
+  button:not([disabled]),
+  [role="button"]:not([disabled]) {
+    cursor: pointer;
+  }
 }
 
 @theme {
@@ -188,6 +188,7 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import PageTemplate from '@/components/templates/DashboardTemplate/PageTemplate';
 import { useAuth, JWTPayload } from '@/context/AuthContext';
@@ -25,12 +25,14 @@ export default function DashboardPage() {
       await apiClientPrivate.get('/');
 
       if (!auth.accessToken) {
-        alert("No access token found. Please log in again.");
+        alert('No access token found. Please log in again.');
         return;
       }
 
       // display decoded JWT payload
-      const decodedToken: JWTPayload = jwtDecode<JWTPayload>(auth.accessToken? auth.accessToken : '');
+      const decodedToken: JWTPayload = jwtDecode<JWTPayload>(
+        auth.accessToken ? auth.accessToken : '',
+      );
 
       alert(`${decodedToken?.fullName || 'N/A'}, you have made a protected request!`);
     } catch (error) {
