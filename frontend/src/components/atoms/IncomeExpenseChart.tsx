@@ -24,18 +24,18 @@ export const IncomeExpenseChart = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.3 }}
-      className="rounded-3xl border border-gray-100 bg-white p-8"
+      className="rounded-3xl border border-border bg-muted p-8"
     >
       <div className="mb-8">
-        <h2 className="mb-2 text-xl font-light text-gray-900">Cash Flow Analysis</h2>
+        {/*<h2 className="mb-2 text-xl font-light">Cash Flow Analysis</h2>*/}
         <div className="flex items-center gap-6 text-sm">
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full bg-emerald-400"></div>
-            <span className="text-gray-600">Income</span>
+            <span className="text-muted-foreground text-lg">Income</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full bg-red-400"></div>
-            <span className="text-gray-600">Expenses</span>
+            <span className="text-muted-foreground text-lg">Expenses</span>
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@ export const IncomeExpenseChart = () => {
                     className="w-4 rounded-t-sm bg-red-400"
                   />
                 </div>
-                <span className="text-xs text-gray-400">{month}</span>
+                <span className="text-sm text-muted-foreground">{month}</span>
               </div>
             );
           })}

@@ -17,7 +17,7 @@ const SidebarLinkItem = (props: SidebarLinkItemProps) => {
       href={href}
     >
       {icon && React.isValidElement(icon) && React.cloneElement(icon, { size: 17 })}
-      <span className="ml-3">{label}</span>
+      <span className="ml-3 text-foreground">{label}</span>
     </Link>
   );
 };
