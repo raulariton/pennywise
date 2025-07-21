@@ -4,6 +4,7 @@ dotenv.config();
 import express from 'express';
 import dataSource from '@config/database';
 import authRoutes from '@routes/authRoutes';
+import entryRoutes from '@routes/entryRoutes';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
@@ -24,6 +25,7 @@ app.use(cors({
 
 // configure routes
 app.use('/auth', authRoutes);
+app.use('/entries', entryRoutes);
 
 // test route
 // TODO: remove
