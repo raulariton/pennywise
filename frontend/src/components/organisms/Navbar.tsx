@@ -2,7 +2,7 @@ import React from 'react';
 
 const Navbar = () => {
   return (
-    <nav className="flex flex-row items-center border-b border-neutral-600 bg-card sticky top-0 z-50">
+    <nav className="flex flex-row items-center border-b border-border bg-card sticky top-0 z-50">
       {/* Space that matches sidebar width */}
       <div className="w-64 flex-shrink-0"></div>
       
