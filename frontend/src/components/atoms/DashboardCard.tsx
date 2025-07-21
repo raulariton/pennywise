@@ -30,7 +30,7 @@ export const DashboardCard = ({
     >
       <motion.div
         whileHover="hovered"
-        className={`group relative w-full max-w-sm overflow-hidden rounded-3xl border border-border transition-colors duration-500 hover:border-card ${className}`}
+        className={`group relative w-full max-w-sm bg-(--theme) overflow-hidden rounded-3xl border border-border transition-colors duration-500 hover:border-card ${className}`}
       >
         {/* Default Layer */}
         <motion.div
@@ -55,18 +55,18 @@ export const DashboardCard = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div
-                className={`h-2 w-2 rounded-full ${isPositive ? 'bg-emerald-400' : 'bg-red-400'}`}
+                className={`h-3 w-3 rounded-full ${isPositive ? 'bg-emerald-400' : 'bg-red-400'}`}
               />
-              <span
-                className={`text-sm font-medium ${
-                  isPositive ? 'text-emerald-600' : 'text-red-500'
+              <div
+                className={`rounded-full px-3 py-1 text-xs font-medium ${
+                  isPositive ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
                 }`}
               >
                 {isPositive ? '+' : ''}
                 {change}%
-              </span>
+              </div>
             </div>
-            <span className="text-xs text-muted-foreground">{period}</span>
+            <span className="text-xs text-primary">{period}</span>
           </div>
         </motion.div>
 
