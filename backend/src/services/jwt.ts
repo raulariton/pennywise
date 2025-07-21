@@ -1,6 +1,6 @@
 import { JwtPayload } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
-import { Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { createClient } from 'redis';
 
 // ensure env variables are defined
@@ -81,3 +81,32 @@ export const verifyToken = async (
     return;
   }
 };
+
+export const verifyTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  // get the token from the Authorization header
+  const token = req.headers['authorization'];
+
+  if (!token) {
+    res.status(401).json({ error: 'No authorization header provided.' });
+    return;
+  }
+
+  // verify the token
+  const decodedToken = await verifyToken(token, 'access', res);
+
+  if (!decodedToken) {
+    return; // error response already sent in verifyToken
+  }
+
+  // attach the decoded token to the request object for further use
+  (req as any).tokenPayload = decodedToken;
+  
+  // Also set user property for convenience
+  (req as any).user = {
+    id: decodedToken.id,
+    email: decodedToken.email,
+    fullName: decodedToken.fullName
+  };
+
+  next(); // call the next middleware or route handler
+}
