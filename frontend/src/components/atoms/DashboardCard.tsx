@@ -38,7 +38,7 @@ export const DashboardCard = ({
           variants={{
             hovered: { opacity: 0, scale: 0.95 },
           }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.4 }}
           className="flex h-52 flex-col justify-between p-8"
         >
           {/* Title */}

@@ -5,6 +5,7 @@ import apiClient from '@/utils/apiClient';
 import { useRouter } from 'next/navigation';
 import axios, { AxiosError } from 'axios';
 import useToast from '@/hooks/useToast';
+import Cookies from 'js-cookie';
 
 export interface JWTPayload {
   id: string;
@@ -55,7 +56,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   //  they will not show up
   useEffect(() => {
     if (error) {
-      toast.error(error)
+      toast.error(error);
     }
   }, [error, toast]);
 
@@ -95,7 +96,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
 
         if (token) {
-          login(token)
+          login(token);
         }
       } catch (error) {
         console.error('Failed to refresh token:', error);
@@ -118,6 +119,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = (token: string) => {
     // set in-memory state
     setAccessToken(token);
+    Cookies.set('access-token', token, { expires: 1 }); // expires in 1 day
 
     // decode token to extract user information
     try {

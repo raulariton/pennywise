@@ -1,99 +1,17 @@
 import { MotionConfig, motion } from 'framer-motion';
+import { useFetchEntries, Entry } from '../../hooks/useEntries';
 
 enum EntryType {
   INCOME = 'income',
   EXPENSE = 'expense',
 }
 
-interface Entry {
-  id: string;
-  type: EntryType;
-  amount: number;
-  currency: string;
-  description?: string;
-  timestamp: Date;
-  category: {
-    name: string;
-    color?: string;
-  };
-}
-
 export const TransactionTable = () => {
   // Sample data matching your Entry model
-  const entries: Entry[] = [
-    {
-      id: '1',
-      type: EntryType.INCOME,
-      amount: 6800,
-      currency: 'USD',
-      description: 'Monthly Salary',
-      timestamp: new Date('2024-12-01'),
-      category: { name: 'Salary', color: 'bg-emerald-100 text-emerald-800' },
-    },
-    {
-      id: '2',
-      type: EntryType.EXPENSE,
-      amount: 1200,
-      currency: 'USD',
-      description: 'Apartment Rent',
-      timestamp: new Date('2024-12-01'),
-      category: { name: 'Housing', color: 'bg-blue-100 text-blue-800' },
-    },
-    {
-      id: '3',
-      type: EntryType.EXPENSE,
-      amount: 320,
-      currency: 'USD',
-      description: 'Grocery Shopping',
-      timestamp: new Date('2024-12-02'),
-      category: { name: 'Food', color: 'bg-orange-100 text-orange-800' },
-    },
-    {
-      id: '4',
-      type: EntryType.INCOME,
-      amount: 450,
-      currency: 'USD',
-      description: 'Freelance Project',
-      timestamp: new Date('2024-12-03'),
-      category: { name: 'Freelance', color: 'bg-purple-100 text-purple-800' },
-    },
-    {
-      id: '5',
-      type: EntryType.EXPENSE,
-      amount: 89,
-      currency: 'USD',
-      description: 'Utilities Bill',
-      timestamp: new Date('2024-12-03'),
-      category: { name: 'Utilities', color: 'bg-yellow-100 text-yellow-800' },
-    },
-    {
-      id: '6',
-      type: EntryType.EXPENSE,
-      amount: 65,
-      currency: 'USD',
-      description: 'Gas Station',
-      timestamp: new Date('2024-12-04'),
-      category: { name: 'Transportation', color: 'bg-red-100 text-red-800' },
-    },
-    {
-      id: '7',
-      type: EntryType.INCOME,
-      amount: 200,
-      currency: 'USD',
-      description: 'Investment Dividend',
-      timestamp: new Date('2024-12-05'),
-      category: { name: 'Investment', color: 'bg-green-100 text-green-800' },
-    },
-    {
-      id: '8',
-      type: EntryType.EXPENSE,
-      amount: 45,
-      currency: 'USD',
-      description: 'Coffee & Lunch',
-      timestamp: new Date('2024-12-05'),
-      category: { name: 'Food', color: 'bg-orange-100 text-orange-800' },
-    },
-  ];
+  const { entries, loading, error, refetch } = useFetchEntries();
+
+  if (loading) return <p>Loading entries...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
 
   const formatAmount = (amount: number, currency: string, type: EntryType) => {
     const symbol = currency === 'USD' ? '$' : currency;
@@ -101,14 +19,16 @@ export const TransactionTable = () => {
     return `${prefix}${symbol}${amount.toLocaleString()}`;
   };
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
+  const formatDate = (date: string | Date): string => {
+    const parsedDate = typeof date === 'string' ? new Date(date) : date;
+    if (isNaN(parsedDate.getTime())) return 'Invalid date';
+
+    return parsedDate.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
     });
   };
-
   return (
     <div className="overflow-hidden rounded-3xl border border-gray-100 bg-white">
       <div className="border-b border-gray-100 p-6">

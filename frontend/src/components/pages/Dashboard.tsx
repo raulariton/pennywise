@@ -6,13 +6,34 @@ import { DashboardCard } from '../atoms/DashboardCard';
 import { MotionConfig, motion } from 'framer-motion';
 import { IncomeExpenseChart } from '../atoms/IncomeExpenseChart';
 import { TransactionTable } from '../atoms/TransactionTable';
+import React, { useState } from 'react';
+import { useCreateEntry, EntryFormData } from '../../hooks/useEntries';
+import EntryModal from '../atoms/EntryModal';
 
 export default function DashboardPage() {
+  const { createEntry, loading, error } = useCreateEntry();
   const apiClientPrivate = useApiClientPrivate();
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    type: 'income',
+    amount: 0,
+    currency: 'USD',
+    description: '',
+    timestamp: new Date().toISOString().split('T')[0],
+    categoryName: '',
+  });
 
   return (
     <PageTemplate>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen">
+        <div className="fixed right-6 bottom-6 z-50">
+          <button
+            onClick={() => setShowModal(true)}
+            className="rounded-full bg-blue-600 px-5 py-3 text-white shadow-lg transition hover:bg-blue-700"
+          >
+            + New Entry
+          </button>
+        </div>
         {/* Header */}
         <motion.header
           initial={{ opacity: 0, y: -20 }}
@@ -104,6 +125,7 @@ export default function DashboardPage() {
           </motion.footer>
         </div>
       </div>
+      {showModal && <EntryModal />}
     </PageTemplate>
   );
 }
