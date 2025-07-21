@@ -16,8 +16,8 @@ const SidebarLinkItem = (props: SidebarLinkItemProps) => {
       className="flex flex-row hover:bg-cyan-500/25 p-2 rounded-md items-center cursor-pointer"
       href={href}
     >
-      {icon && React.isValidElement(icon) && React.cloneElement(icon, { size: 17 })}
-      <span className="ml-3">{label}</span>
+      <div className="text-foreground">{icon && React.isValidElement(icon) && React.cloneElement(icon, { size: 17, color: 'currentColor' })}</div>
+      <span className="ml-3 text-foreground">{label}</span>
     </Link>
   );
 };
