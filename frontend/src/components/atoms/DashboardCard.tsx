@@ -30,7 +30,7 @@ export const DashboardCard = ({
     >
       <motion.div
         whileHover="hovered"
-        className={`group relative w-full max-w-sm overflow-hidden rounded-3xl border border-gray-100 bg-white transition-colors duration-500 hover:border-gray-200 ${className}`}
+        className={`group relative w-full max-w-sm overflow-hidden rounded-3xl border border-border transition-colors duration-500 hover:border-card ${className}`}
       >
         {/* Default Layer */}
         <motion.div
@@ -43,12 +43,12 @@ export const DashboardCard = ({
         >
           {/* Title */}
           <div className="space-y-1">
-            <h3 className="text-sm font-medium tracking-wide text-gray-400">{title}</h3>
+            <h3 className="text-lg font-medium tracking-wide">{title}</h3>
           </div>
 
           {/* Amount - The Hero */}
           <div className="flex flex-1 items-center">
-            <span className="text-4xl font-light tracking-tight text-gray-900">{amount}</span>
+            <span className="text-4xl font-semibold tracking-tight">{amount}</span>
           </div>
 
           {/* Change Indicator */}
@@ -66,7 +66,7 @@ export const DashboardCard = ({
                 {change}%
               </span>
             </div>
-            <span className="text-xs text-gray-400">{period}</span>
+            <span className="text-xs text-muted-foreground">{period}</span>
           </div>
         </motion.div>
 
@@ -77,13 +77,13 @@ export const DashboardCard = ({
             hovered: { opacity: 1, scale: 1 },
           }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="absolute inset-0 flex h-52 flex-col justify-between bg-white p-8"
+          className="absolute inset-0 flex h-52 flex-col justify-between bg-muted p-8"
         >
           {/* Header */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-medium tracking-wide text-gray-400">{title}</h3>
-              <p className="mt-1 text-lg font-medium text-gray-900">12 Month Trend</p>
+              <h3 className="text-sm font-medium tracking-wide">{title}</h3>
+              <p className="mt-1 text-lg font-medium text-muted-foreground">12 Month Trend</p>
             </div>
             <div
               className={`rounded-full px-3 py-1 text-xs font-medium ${
@@ -125,7 +125,7 @@ export const DashboardCard = ({
           </div>
 
           {/* Bottom Stats */}
-          <div className="flex items-center justify-between text-xs text-gray-500">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>Jan</span>
             <span>Dec</span>
           </div>

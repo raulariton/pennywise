@@ -110,44 +110,35 @@ export const TransactionTable = () => {
   };
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-gray-100 bg-white">
-      <div className="border-b border-gray-100 p-6">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium text-gray-900">Transaction History</h3>
-          <button className="text-sm text-gray-500 transition-colors hover:text-gray-700">
-            View All
-          </button>
-        </div>
-      </div>
-
+    <div className="overflow-hidden rounded-3xl border border-border bg-muted">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-card border-b border-border">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+              <th className="px-6 py-4 text-left text-xs font-medium tracking-wider text-card-foreground uppercase">
                 Description
               </th>
-              <th className="px-6 py-4 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+              <th className="px-6 py-4 text-left text-xs font-medium tracking-wider text-card-foreground uppercase">
                 Category
               </th>
-              <th className="px-6 py-4 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+              <th className="px-6 py-4 text-left text-xs font-medium tracking-wider text-card-foreground uppercase">
                 Date
               </th>
-              <th className="px-6 py-4 text-right text-xs font-medium tracking-wider text-gray-500 uppercase">
+              <th className="px-6 py-4 text-right text-xs font-medium tracking-wider text-card-foreground uppercase">
                 Amount
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-border">
             {entries.map((entry, index) => (
               <motion.tr
                 key={entry.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="transition-colors hover:bg-gray-50"
+                className="transition-colors bg-card hover:bg-card/25"
               >
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap b">
                   <div className="flex items-center">
                     <div
                       className={`mr-3 h-3 w-3 rounded-full ${
@@ -155,26 +146,25 @@ export const TransactionTable = () => {
                       }`}
                     />
                     <div>
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="font-medium">
                         {entry.description || 'No description'}
                       </div>
-                      <div className="text-xs text-gray-500">{entry.type}</div>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${
-                      entry.category.color || 'bg-gray-100 text-gray-800'
+                      entry.category.color || 'bg-muted text-muted-foreground'
                     }`}
                   >
                     {entry.category.name}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                <td className="px-6 py-4 text-sm whitespace-nowrap text-muted-foreground">
                   {formatDate(entry.timestamp)}
                 </td>
-                <td className="px-6 py-4 text-right text-sm font-medium whitespace-nowrap">
+                <td className="px-6 py-4 text-right font-medium whitespace-nowrap">
                   <span
                     className={`${
                       entry.type === EntryType.INCOME ? 'text-emerald-600' : 'text-red-600'
@@ -189,10 +179,10 @@ export const TransactionTable = () => {
         </table>
       </div>
 
-      <div className="border-t border-gray-100 bg-gray-50 p-4">
-        <div className="flex items-center justify-between text-sm text-gray-500">
+      <div className="border-t border-border p-4">
+        <div className="flex items-center justify-between text-sm">
           <span>Showing 8 of 156 transactions</span>
-          <button className="font-medium text-blue-600 hover:text-blue-700">Load More</button>
+          <button className="font-medium text-cyan-700 hover:text-cyan-800">View all</button>
         </div>
       </div>
     </div>
