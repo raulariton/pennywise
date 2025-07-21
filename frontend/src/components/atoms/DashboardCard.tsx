@@ -30,7 +30,7 @@ export const DashboardCard = ({
     >
       <motion.div
         whileHover="hovered"
-        className={`group relative w-full max-w-sm overflow-hidden rounded-3xl border border-border transition-colors duration-500 hover:border-card ${className}`}
+        className={`group relative w-full max-w-sm bg-(--theme) overflow-hidden rounded-3xl border border-border transition-colors duration-500 hover:border-card ${className}`}
       >
         {/* Default Layer */}
         <motion.div

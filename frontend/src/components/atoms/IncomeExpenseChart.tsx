@@ -27,6 +27,7 @@ export const IncomeExpenseChart = () => {
       className="rounded-3xl border border-border bg-muted p-8"
     >
       <div className="mb-8">
+        {/* TODO: use charts from shadcn/ui */}
         {/*<h2 className="mb-2 text-xl font-light">Cash Flow Analysis</h2>*/}
         <div className="flex items-center gap-6 text-sm">
           <div className="flex items-center gap-2">
