@@ -1,5 +1,8 @@
 import { DataSource } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // ensure env variables are defined
 if (!process.env.DATABASE_URL || !process.env.DATABASE_PASSWORD) {
@@ -18,6 +21,7 @@ const config: PostgresConnectionOptions = {
   url: completeDatabaseURL,
   synchronize: false, // TODO: use migrations from now on for any modifications
   entities: ['src/entities/*.ts'],
+  migrations: ['src/migrations/*.ts'],
 };
 
 const dataSource = new DataSource(config);

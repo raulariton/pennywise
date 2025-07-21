@@ -34,10 +34,7 @@ export class Entry {
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   timestamp!: Date;
 
-  @Column({ type: "uuid" })
-  userId!: string; // foreign key to the User entity
-
-  @OneToOne(() => Category)
+  @ManyToOne(() => Category)
   @JoinColumn({
     name: "categoryId",
     referencedColumnName: "id"

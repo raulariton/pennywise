@@ -5,7 +5,9 @@
   "main": "index.ts",
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register src/index.ts",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "typeorm": "ts-node -r tsconfig-paths/register node_modules/typeorm/cli.js",
+    "seed": "ts-node -r tsconfig-paths/register src/scripts/createCategories.ts"
   },
   "keywords": [],
   "author": "",

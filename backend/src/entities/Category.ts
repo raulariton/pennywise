@@ -1,8 +1,8 @@
-import { Entity, Column, PrimaryColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("categories")
 export class Category {
-  @PrimaryColumn("uuid")
+  @PrimaryGeneratedColumn("uuid")
   id!: string;
 
   // TODO: how will we handle localization?
