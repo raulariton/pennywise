@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Entry } from '@entities/Entry';
+import { Category } from '@entities/Category';
 import dataSource from '@config/database';
 import { Repository } from 'typeorm';
 import { findEntryById } from '@services/entryServices';
@@ -17,8 +18,7 @@ export class EntryController {
    * Creates a new entry (income or expense).
    */
   static async createEntry(req: Request, res: Response): Promise<void> {
-    const { type, amount, currency, description, timestamp, categoryId } = req.body;
-
+    const { type, amount, currency, description, timestamp, category } = req.body;
     const userId = (req as any).user?.id;
 
     if (!userId) {
@@ -26,9 +26,27 @@ export class EntryController {
       return;
     }
 
-    // NOTE: categoryId will be sent from the frontend, assuming it is valid
-    if (!type || !amount || !currency || !categoryId) {
-      res.status(400).json({ error: 'Type, amount, currency and category are required.' });
+    if (!type || !amount || !currency || !category?.name) {
+      res.status(400).json({ error: 'Type, amount, currency, and category name are required.' });
+      return;
+    }
+
+    const categoryRepository = dataSource.getRepository(Category);
+    let categoryEntity;
+
+    try {
+      // Try to find the category by name (optionally scoped to user)
+      categoryEntity = await categoryRepository.findOne({
+        where: { name: category.name },
+      });
+
+      // If not found, create a new category
+      if (!categoryEntity) {
+        categoryEntity = categoryRepository.create({ name: category.name });
+        categoryEntity = await categoryRepository.save(categoryEntity);
+      }
+    } catch (err) {
+      res.status(500).json({ error: 'Error processing category.' });
       return;
     }
 
@@ -39,17 +57,19 @@ export class EntryController {
       ...(timestamp ? { timestamp } : {}),
       ...(description && description.trim() ? { description } : {}),
       user: { id: userId },
-      category: { id: categoryId },
+      category: { id: categoryEntity.id },
     });
 
-    const entryRepository: Repository<Entry> = dataSource.getRepository(Entry);
+    const entryRepository = dataSource.getRepository(Entry);
 
     try {
       const savedEntry = await entryRepository.save(entry);
       // return the saved entry in the json response
       res.status(201).json(savedEntry);
+      return;
     } catch (error) {
       res.status(500).json({ error: `Internal server error while creating entry: ${error}` });
+      return;
     }
   }
 
