@@ -17,6 +17,7 @@ export default function DashboardPage() {
   };
 
   return (
+<<<<<<< HEAD
     <PageTemplate navTitle="Dashboard" navSubtitle="Your financial overview at a glance">
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
         {/* Header Section with CTA */}
@@ -113,10 +114,64 @@ export default function DashboardPage() {
         </motion.section>
 
         {/* Recent Transactions Section */}
+=======
+    <PageTemplate
+    navTitle="Dashboard"
+    navSubtitle="Your financial overview at a glance">
+      <div className="min-h-screen">
+        {/* Primary Metrics */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <h2 className="mb-3 text-2xl font-light">Key Metrics</h2>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <DashboardCard
+              title="Total Balance"
+              amount="$24,500"
+              change={12.5}
+              data={[
+                20000, 21500, 19800, 22300, 21900, 23100, 22800, 24200, 23600, 24800, 23900,
+                24500,
+              ]}
+            />
+            <DashboardCard
+              title="Monthly Income"
+              amount="$6,800"
+              change={5.2}
+              data={[6200, 6400, 6100, 6600, 6300, 6700, 6500, 6900, 6600, 7000, 6750, 6800]}
+            />
+            <DashboardCard
+              title="Net Worth"
+              amount="$45,820"
+              change={7.8}
+              period="vs last quarter"
+              data={[
+                38000, 39500, 37200, 41800, 40300, 42900, 41600, 44200, 43100, 45600, 44200,
+                45820,
+              ]}
+            />
+          </div>
+        </motion.section>
+
+        {/* Cash Flow Chart */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <h2 className="mt-6 mb-3 text-2xl font-light">Monthly Overview</h2>
+          <IncomeExpenseChart />
+        </motion.section>
+
+        {/* Transaction Table */}
+>>>>>>> 498cd30660affabacc1a4efc7f82f7ff825aea4e
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
+<<<<<<< HEAD
           className="mb-8"
         >
           <div className="mb-6 flex items-center justify-between">
@@ -176,6 +231,12 @@ export default function DashboardPage() {
             <p className="text-lg font-light text-slate-700">78%</p>
           </div>
         </motion.div>
+=======
+        >
+          <h2 className="mt-6 mb-3 text-2xl font-light">Recent Transactions</h2>
+          <TransactionTable />
+        </motion.section>
+>>>>>>> 498cd30660affabacc1a4efc7f82f7ff825aea4e
       </div>
 
       {showModal && <EntryModal onClose={() => setShowModal(false)} />}

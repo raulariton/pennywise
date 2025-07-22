@@ -19,19 +19,35 @@ const Logo = (props: LogoProps) => {
 
   return (
     <div>
-      <Image
-        src="full-logo-white.svg"
-        alt="Logo"
-        width={100}
-        height={25}
-        // width and height properties don't matter since we use className for sizing
-        className={cn(
-          heightBasedOnSize[size],
-          'w-auto',
-          className,
-          glow ? 'animate-pulse drop-shadow-[0_0_10px_#06b6d4] filter' : '',
-        )}
-      />
+      {/* Light mode logo */}
+    <Image
+      src="full-logo-black.svg"
+      alt="Logo"
+      width={100}
+      height={25}
+      className={cn(
+        heightBasedOnSize[size],
+        'w-auto',
+        'block dark:hidden',
+        className,
+        glow ? 'animate-pulse drop-shadow-[0_0_10px_#06b6d4] filter' : '',
+      )}
+    />
+    
+    {/* Dark mode logo */}
+    <Image
+      src="full-logo-white.svg"
+      alt="Logo"
+      width={100}
+      height={25}
+      className={cn(
+        heightBasedOnSize[size],
+        'w-auto',
+        'hidden dark:block',
+        className,
+        glow ? 'animate-pulse drop-shadow-[0_0_10px_#06b6d4] filter' : '',
+      )}
+    />
     </div>
   );
 };

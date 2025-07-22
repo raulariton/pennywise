@@ -5,6 +5,7 @@ import express from 'express';
 import dataSource from '@config/database';
 import authRoutes from '@routes/authRoutes';
 import entryRoutes from '@routes/entryRoutes';
+import categoryRoutes from '@routes/categoryRoutes';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
@@ -18,14 +19,17 @@ app.use(express.urlencoded({ extended: true }));
 // middleware to parse cookies
 app.use(cookieParser());
 // CORS middleware to allow cross-origin requests
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true,
-}))
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  }),
+);
 
 // configure routes
 app.use('/auth', authRoutes);
 app.use('/entries', entryRoutes);
+app.use('/categories', categoryRoutes);
 
 // test route
 // TODO: remove

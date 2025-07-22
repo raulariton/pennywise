@@ -147,5 +147,6 @@ export class EntryController {
 
   /**
    * Deletes an entry.
-   */
+ 
+  */
 }
