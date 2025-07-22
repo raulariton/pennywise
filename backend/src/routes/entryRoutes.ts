@@ -11,4 +11,3 @@ entryRoutes.get('/', EntryController.getEntries);
 entryRoutes.put('/:id', EntryController.updateEntry);
 
 export default entryRoutes;
-

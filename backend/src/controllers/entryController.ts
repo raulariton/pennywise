@@ -64,6 +64,7 @@ export class EntryController {
 
     try {
       const savedEntry = await entryRepository.save(entry);
+      // return the saved entry in the json response
       res.status(201).json(savedEntry);
       return;
     } catch (error) {
@@ -146,5 +147,6 @@ export class EntryController {
 
   /**
    * Deletes an entry.
-   */
+ 
+  */
 }

@@ -21,6 +21,7 @@ export interface Entry {
   description: string;
   timestamp: string; // ISO string
   category: {
+    color: string | undefined;
     id: string;
     name: string;
     description: string | null;
