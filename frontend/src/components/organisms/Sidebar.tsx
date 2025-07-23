@@ -28,7 +28,7 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="bg-card border-border fixed top-0 left-0 z-100 flex h-screen w-64 flex-col border-r-1 p-4 shadow-lg">
+    <div className="bg-card border-border fixed top-0 left-0 z-40 flex h-screen w-64 flex-col border-r-1 p-4 shadow-lg">
       {/* logo header */}
       <div className="mt-3 mb-6 flex items-center justify-center">
         <Logo size={'sm'} />

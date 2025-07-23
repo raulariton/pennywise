@@ -26,7 +26,7 @@ export class EntryController {
       return;
     }
 
-    if (!type || !amount || !currency || !category?.name) {
+    if (!type || !amount || !currency || !category) {
       res.status(400).json({ error: 'Type, amount, currency, and category name are required.' });
       return;
     }
@@ -42,7 +42,7 @@ export class EntryController {
 
       // If not found, create a new category
       if (!categoryEntity) {
-        categoryEntity = categoryRepository.create({ name: category.name });
+        categoryEntity = categoryRepository.create({ name: category });
         categoryEntity = await categoryRepository.save(categoryEntity);
       }
     } catch (err) {

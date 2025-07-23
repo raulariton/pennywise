@@ -4,12 +4,14 @@ import { cn } from '@/lib/utils';
 
 interface LogoProps {
   size: 'sm' | 'md' | 'lg';
+  mini?: boolean;
   className?: string;
   glow?: boolean;
+  spin?: boolean;
 }
 
 const Logo = (props: LogoProps) => {
-  const { size, className, glow } = props;
+  const { size, mini, className, glow, spin } = props;
 
   const heightBasedOnSize = {
     'sm': 'h-[25px]',
@@ -18,10 +20,14 @@ const Logo = (props: LogoProps) => {
   }
 
   return (
-    <div>
+    <div
+      className={cn(
+        spin ? 'animate-spin' : '',
+      )}
+    >
       {/* Light mode logo */}
     <Image
-      src="full-logo-black.svg"
+      src={mini ? "coin-icon-black.svg" : "full-logo-black.svg"}
       alt="Logo"
       width={100}
       height={25}
@@ -36,7 +42,7 @@ const Logo = (props: LogoProps) => {
     
     {/* Dark mode logo */}
     <Image
-      src="full-logo-white.svg"
+      src={mini ? "coin-icon-white.svg" : "full-logo-white.svg"}
       alt="Logo"
       width={100}
       height={25}

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useCategories, Category } from '@/hooks/useCategories';
+import { useFetchCategories, Category } from '@/hooks/crud/useCategories';
 
 interface Props {
   value: Category | null;
@@ -12,7 +12,7 @@ export const CategorySelect: React.FC<Props> = ({
   onChange,
   placeholder = 'Select a category',
 }) => {
-  const { categories, loading, error } = useCategories();
+  const { categories, isLoading: loading, isError: error } = useFetchCategories();
   const [search, setSearch] = useState('');
   const [filtered, setFiltered] = useState<Category[]>([]);
   const [showOptions, setShowOptions] = useState(false);
@@ -20,7 +20,7 @@ export const CategorySelect: React.FC<Props> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setFiltered(categories.filter((cat) => cat.name.toLowerCase().includes(search.toLowerCase())));
+    // setFiltered(categories.filter((cat) => cat.name.toLowerCase().includes(search.toLowerCase())));
   }, [search, categories]);
 
   const handleSelect = (category: Category) => {
@@ -76,16 +76,16 @@ export const CategorySelect: React.FC<Props> = ({
             <li className="px-4 py-2 text-sm text-gray-500">No categories found</li>
           )}
 
-          {!loading &&
-            filtered.map((cat) => (
-              <li
-                key={cat.id}
-                onClick={() => handleSelect(cat)}
-                className="cursor-pointer px-4 py-2 text-sm hover:bg-gray-100"
-              >
-                {cat.name}
-              </li>
-            ))}
+          {/*{!loading &&*/}
+          {/*  filtered.map((cat) => (*/}
+          {/*    <li*/}
+          {/*      key={cat.id}*/}
+          {/*      onClick={() => handleSelect(cat)}*/}
+          {/*      className="cursor-pointer px-4 py-2 text-sm hover:bg-gray-100"*/}
+          {/*    >*/}
+          {/*      {cat.name}*/}
+          {/*    </li>*/}
+          {/*  ))}*/}
         </ul>
       )}
     </div>

@@ -1,5 +1,4 @@
-import { MotionConfig, motion } from 'framer-motion';
-import { useFetchEntries, Entry } from '../../hooks/useEntries';
+import { motion } from 'framer-motion';
 
 enum EntryType {
   INCOME = 'income',
@@ -11,7 +10,7 @@ export const TransactionTable = () => {
   const { entries, loading, error, refetch } = useFetchEntries();
 
   if (loading) return <p>Loading entries...</p>;
-  if (error) return <p className="text-red-500">Error: {error}</p>;
+  if (error) return <p className="text-red-500">Error: {error.message}</p>;
 
   const formatAmount = (amount: number, currency: string, type: EntryType) => {
     const symbol = currency === 'USD' ? '$' : currency;
