@@ -1,17 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useCreateEntry, EntryFormData } from '../../hooks/useEntries';
+import { useCreateEntry, EntryFormData } from '@/hooks/crud/useEntries';
 import { FormField } from '../molecules/FormField';
 import { SelectInput } from '../atoms/SelectInput';
 import { TextInput } from '../atoms/TextInput';
 import { FormActions } from '../molecules/FormAction';
 import { ErrorMessage } from '../atoms/ErrorMessage';
 import { CategorySelect } from '../atoms/CategorySelect';
-import { Category } from '@/hooks/useCategories';
+import { Category } from '@/hooks/crud/useCategories';
 
 const EntryModal = ({ onClose }: { onClose: () => void }) => {
-  const { createEntry, loading, error } = useCreateEntry();
+  const { createEntry, isLoading, isError } = useCreateEntry();
   const [showModal, setShowModal] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [formData, setFormData] = useState<EntryFormData>({
@@ -20,7 +20,7 @@ const EntryModal = ({ onClose }: { onClose: () => void }) => {
     currency: 'USD',
     description: '',
     timestamp: new Date().toISOString().split('T')[0],
-    categoryName: '',
+    category: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,7 +37,7 @@ const EntryModal = ({ onClose }: { onClose: () => void }) => {
     if (selectedCategory) {
       setFormData((prev) => ({
         ...prev,
-        categoryName: selectedCategory.name,
+        category: selectedCategory.name,
       }));
     }
   }, [selectedCategory]);
@@ -112,11 +112,12 @@ const EntryModal = ({ onClose }: { onClose: () => void }) => {
             />
           </FormField>
 
-          {error && (
-            <ErrorMessage message={typeof error === 'string' ? error : 'Submission failed'} />
+          {/*TODO: add toast message*/}
+          {isError && (
+            <ErrorMessage message={typeof isError === 'string' ? isError : 'Submission failed'} />
           )}
 
-          <FormActions onCancel={() => setShowModal(false)} loading={loading} />
+          <FormActions onCancel={() => setShowModal(false)} loading={isLoading} />
         </form>
       </div>
     </div>

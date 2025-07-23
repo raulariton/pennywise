@@ -84,12 +84,26 @@ export const verifyToken = async (
 
 export const verifyTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   // get the token from the Authorization header
-  const token = req.headers['authorization'];
+  let token = req.headers['authorization'];
 
   if (!token) {
     res.status(401).json({ error: 'No authorization header provided.' });
     return;
   }
+
+  // check if the token starts with 'Bearer ' and extract the token part
+  const tokenParts = token.split(' ');
+  if (tokenParts.length !== 2 || tokenParts[0] !== 'Bearer') {
+    res.status(401).json({ error: 'Invalid authorization header format. Expected "Bearer <token>".' });
+    return;
+  }
+  // extract the token from the header
+  token = tokenParts[1];
+  if (!token) {
+    res.status(401).json({ error: 'No token provided.' });
+    return;
+  }
+
 
   // verify the token
   const decodedToken = await verifyToken(token, 'access', res);

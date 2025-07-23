@@ -86,4 +86,24 @@ const useApiClientPrivate = () => {
   return apiClient;
 };
 
+/**
+ * API client hook for private routes
+ * should be used for making POST, PUT, DELETE requests to protected endpoints
+ * GET requests can be made with this hook as well,
+ * but it's recommended to use the fetcher function for SWR
+ */
 export default useApiClientPrivate;
+
+// fetch hook
+export const useApiClientPrivateFetcher = () => {
+  const apiClient = useApiClientPrivate();
+
+  // fetcher function for SWR
+  const fetcher = async (url: string) => {
+    const response = await apiClient.get(url);
+    return response.data;
+    // TODO: add query params support
+  }
+
+  return fetcher;
+}

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Entry } from '../../hooks/useEntries';
+import { Entry } from '@/hooks/crud/useEntries';
 import { StatusDot } from '../atoms/StatusDot';
 import { CategoryBadge } from '../atoms/CategoryBadge';
 import { FormattedDate } from '../atoms/FormattedDate';

@@ -20,6 +20,8 @@ type AuthFormFieldsProps = {
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
+// TODO: make <Label> and <InputField> into a molecule component (FormField)
+//  and use that component in AuthCard
 export default function AuthFormFields({
   isRegister,
   formData,

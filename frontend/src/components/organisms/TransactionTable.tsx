@@ -1,12 +1,16 @@
-import { useFetchEntries } from '../../hooks/useEntries';
+import { useFetchEntries } from '@/hooks/crud/useEntries';
 import { TransactionRow } from '../molecules/TransactionRow';
-import { ViewAllButton } from '../atoms/ViewAllButton';
+import useSWR from 'swr';
+import { useApiClientPrivateFetcher } from '@/hooks/useApiClientPrivate';
 
 export const TransactionTable = () => {
-  const { entries, loading, error } = useFetchEntries();
+  const { entries, isLoading, isError: error } = useFetchEntries();
 
-  if (loading) return <p>Loading entries...</p>;
-  if (error) return <p className="text-red-500">Error: {error}</p>;
+  // TODO: skeleton for loading
+  if (isLoading) return <p>Loading entries...</p>;
+
+  // TODO: toaster for errors
+  if (error) return <p className="text-red-500">Error: {error.message}</p>;
 
   if (!entries || entries.length === 0) {
     return <p className="text-muted-foreground py-8 text-center">No transactions found.</p>;
@@ -40,12 +44,13 @@ export const TransactionTable = () => {
         </table>
       </div>
 
-      <div className="border-border border-t p-4">
-        <div className="flex items-center justify-between text-sm">
-          <span>Showing {entries.length} of 156 transactions</span>
-          <ViewAllButton />
-        </div>
-      </div>
+      {/* Infinite scroll modal toggle, work in progress */}
+      {/*<div className="border-border border-t p-4">*/}
+      {/*  <div className="flex items-center justify-between text-sm">*/}
+      {/*    <span>Showing {entries.length} of 156 transactions</span>*/}
+      {/*    <ViewAllButton />*/}
+      {/*  </div>*/}
+      {/*</div>*/}
     </div>
   );
 };
