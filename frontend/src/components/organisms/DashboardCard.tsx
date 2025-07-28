@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, MotionConfig } from 'framer-motion';
+import { motion, MotionConfig } from 'motion/react';
 import { CardFooter } from '../molecules/CardFooter';
 import { CardHeader } from '../molecules/CardHeader';
 import { DashboardGraph } from './DashboardCardGraph';
