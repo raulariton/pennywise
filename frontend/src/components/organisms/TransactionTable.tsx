@@ -2,15 +2,16 @@ import { useFetchEntries } from '@/hooks/crud/useEntries';
 import { TransactionRow } from '../molecules/TransactionRow';
 import useSWR from 'swr';
 import { useApiClientPrivateFetcher } from '@/hooks/useApiClientPrivate';
+import Skeleton from 'react-loading-skeleton';
+import Logo from '@/components/atoms/Logo';
 
 export const TransactionTable = () => {
   const { entries, isLoading, isError: error } = useFetchEntries();
 
-  // TODO: skeleton for loading
-  if (isLoading) return <p>Loading entries...</p>;
+  if (isLoading) return <div className="py-8 text-center"><Logo size={'sm'} mini={true} spin={true} />Loading...</div>;
 
   // TODO: toaster for errors
-  if (error) return <p className="text-red-500">Error: {error.message}</p>;
+  if (error) return <div className="py-8 text-center">Error.</div>;
 
   if (!entries || entries.length === 0) {
     return <p className="text-muted-foreground py-8 text-center">No transactions found.</p>;

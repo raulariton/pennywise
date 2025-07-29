@@ -20,43 +20,43 @@ interface CategoryIcon {
 export const CATEGORY_ICONS: Record<string, CategoryIcon> = {
   'Groceries': {
     component: <ShoppingBasket/>,
-    color: 'rose-500'
+    color: '#f43f5e'
   },
   'Utilities': {
     component: <HousePlug/>,
-    color: 'purple-500'
+    color: '#a855f7'
   },
   'Shopping': {
     component: <ShoppingCart/>,
-    color: 'violet-500'
+    color: '#ea580c'
   },
   'Transport': {
     component: <BusFront/>,
-    color: 'indigo-500'
+    color: '#6366f1'
   },
   'Travel': {
     component: <Plane/>,
-    color: 'teal-500'
+    color: '#0d9488'
   },
   'Health': {
     component: <Cross/>,
-    color: 'emerald-500'
+    color: '#059669'
   },
   'Entertainment': {
     component: <Gamepad2/>,
-    color: 'sky-500'
+    color: '#0284c7'
   },
   'Gifts': {
     component: <Gift/>,
-    color: 'amber-700'
+    color: '#d97706'
   },
   'Education': {
     component: <GraduationCap/>,
-    color: 'cyan-500'
+    color: '#0891b2'
   },
   'Miscellaneous': {
     component: <CircleQuestionMark/>,
-    color: 'neutral-500'
+    color: '#525252'
   }
 };
 

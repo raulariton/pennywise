@@ -1,6 +1,6 @@
 import apiClient from '@/utils/apiClient';
 import { useAuth } from '@/context/AuthContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useRefreshToken from '@/hooks/useRefreshToken';
 
 /**
@@ -10,6 +10,7 @@ import useRefreshToken from '@/hooks/useRefreshToken';
 const useApiClientPrivate = () => {
   const auth = useAuth();
   const { refresh } = useRefreshToken();
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     /**
@@ -43,7 +44,7 @@ const useApiClientPrivate = () => {
         const prevRequest = error?.config;
 
         // if error is 401 (Unauthorized) and the request has not been retried yet
-        if (error?.response?.status === 401 && !prevRequest?.sent) {
+        if (error?.response?.status === 403 && !prevRequest?.sent) {
           // mark the request as sent to prevent infinite loop
           prevRequest.sent = true;
 
@@ -68,12 +69,16 @@ const useApiClientPrivate = () => {
       },
     );
 
+		// after setting up interceptors, mark the hook as ready
+		setIsReady(true);
+
     return () => {
       // clean up interceptors on unmount
       // (when no longer in use in DOM)
       // (i.e. any component that uses this hook is unmounted)
       apiClient.interceptors.request.eject(requestInterceptor);
       apiClient.interceptors.response.eject(responseInterceptor);
+      setIsReady(false);
     };
 
     /**
@@ -83,7 +88,7 @@ const useApiClientPrivate = () => {
      */
   }, [auth, refresh]);
 
-  return apiClient;
+  return { apiClient, isReady };
 };
 
 /**
@@ -96,14 +101,17 @@ export default useApiClientPrivate;
 
 // fetch hook
 export const useApiClientPrivateFetcher = () => {
-  const apiClient = useApiClientPrivate();
+  const { apiClient, isReady } = useApiClientPrivate();
 
   // fetcher function for SWR
   const fetcher = async (url: string) => {
+    if (!isReady) {
+      throw new Error("API client is not ready");
+    }
     const response = await apiClient.get(url);
     return response.data;
     // TODO: add query params support
   }
 
-  return fetcher;
+  return { fetcher, isReady };
 }
