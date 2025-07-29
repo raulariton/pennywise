@@ -9,15 +9,15 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeor
 /**
  * User entity represents a user in the system.
  */
-@Entity("users")
+@Entity('users')
 export class User {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column({ unique: true })
   email!: string;
 
-  @Column()
+  @Column({ nullable: true })
   password!: string;
 
   @Column({ unique: true, nullable: true })

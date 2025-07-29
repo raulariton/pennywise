@@ -26,11 +26,9 @@ import {
   User,
 } from 'lucide-react';
 import PageTemplate from '@/components/templates/PageTemplate';
-import { BudgetCard } from '@/components/atoms/BudgetCard';
-import { GoalCard } from '@/components/atoms/GoalCard';
-import BudgetList from '@/components/atoms/BudgetList';
-import GoalList from '@/components/atoms/GoalList';
-import BudgetOverviewChart from '@/components/atoms/BudgetOverviewChart';
+import BudgetOverviewChart from '@/components/organisms/BudgetOverviewChart';
+import BudgetList from '@/components/organisms/BudgetList';
+import GoalList from '@/components/organisms/GoalList';
 
 interface Transaction {
   label: string;

@@ -8,6 +8,7 @@ import entryRoutes from '@routes/entryRoutes';
 import categoryRoutes from '@routes/categoryRoutes';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import budgetRoutes from '@routes/budgetPlans';
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -27,6 +28,7 @@ app.use(
 );
 
 // configure routes
+app.use('/budget', budgetRoutes);
 app.use('/auth', authRoutes);
 app.use('/entries', entryRoutes);
 app.use('/categories', categoryRoutes);
