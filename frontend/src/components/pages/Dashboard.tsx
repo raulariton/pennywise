@@ -163,9 +163,7 @@ export default function DashboardPage() {
           {/*>*/}
           {/*  View All*/}
           {/*</motion.button>*/}
-          <div className="border-border bg-muted overflow-hidden rounded-2xl border shadow-sm backdrop-blur-sm transition-shadow duration-300 hover:shadow-md">
-            <TransactionTable />
-          </div>
+          <TransactionTable />
         </motion.section>
       </div>
 

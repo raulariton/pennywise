@@ -20,6 +20,9 @@ export class Entry {
   type!: EntryType;
 
   @Column()
+  name!: string;
+
+  @Column()
   amount!: number;
 
   // a selection of "supported" currencies will be on the frontend
