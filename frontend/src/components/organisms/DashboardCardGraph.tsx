@@ -1,44 +1,60 @@
 import { GraphBar } from '../atoms/GraphBar';
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '../ui/chart';
+import { Area, AreaChart, CartesianGrid, XAxis, ResponsiveContainer } from 'recharts';
 
-export const DashboardGraph = ({ data, change }: { data: number[]; change: number }) => {
-  const maxValue = Math.max(...data);
-  const minValue = Math.min(...data);
-  const isPositive = change >= 0;
+export const DashboardGraph = ({ data, dataLabel, color }: { data: any; dataLabel: string; color: string }) => {
+  const chartConfig: ChartConfig = {
+    amount: {
+      label: dataLabel,
+      color: color,
+    }
+  }
+  
+  // Check if data is valid for charting
+  if (!data || data.length === 0) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <p className="text-muted-foreground">No data available</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-muted absolute inset-0 flex h-52 flex-col justify-between p-8">
+    <div className="bg-muted flex h-full w-full items-center">
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium tracking-wide">Performance</h3>
-          <p className="text-muted-foreground mt-1 text-lg font-medium">12 Month Trend</p>
-        </div>
-        <div
-          className={`rounded-full px-3 py-1 text-xs font-medium ${
-            isPositive ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
-          }`}
-        >
-          {isPositive ? '+' : ''}
-          {change}%
+          <p className="text-muted-foreground mt-1 text-base font-medium">12 Month Trend</p>
         </div>
       </div>
 
-      <div className="flex flex-1 items-end justify-between px-2 pb-4">
-        {data.map((value, index) => (
-          <GraphBar
-            key={index}
-            value={value}
-            maxValue={maxValue}
-            minValue={minValue}
-            index={index}
-            isLast={index === data.length - 1}
-            isPositive={isPositive}
-          />
-        ))}
-      </div>
-
-      <div className="text-muted-foreground flex items-center justify-between text-xs">
-        <span>Jan</span>
-        <span>Dec</span>
+      <div className="h-64 w-full">
+        <ChartContainer config={chartConfig}>
+          <ResponsiveContainer width="100%" height="30%">
+            <AreaChart data={data}>
+              <defs>
+                <linearGradient id="spendingGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ef4444" stopOpacity={0.6} />
+                  <stop offset="100%" stopColor="#ef4444" stopOpacity={0.1} />
+                </linearGradient>
+              </defs>
+              <XAxis
+                dataKey="month"
+                tick={{ fontSize: 10, fill: '#94a3b8' }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <Area
+                type="monotone"
+                dataKey="income"
+                name="Expenses"
+                stroke="#ef4444"
+                strokeWidth={2}
+                fill="url(#spendingGradient)"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </ChartContainer>
       </div>
     </div>
   );

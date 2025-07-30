@@ -6,7 +6,10 @@ import Skeleton from 'react-loading-skeleton';
 import Logo from '@/components/atoms/Logo';
 
 export const TransactionTable = () => {
-  const { entries, isLoading, isError: error } = useFetchEntries();
+  const { entries, isLoading, isError: error } = useFetchEntries({
+    url: '/entries',
+    requestConfig: { params: { limit: 5 } }
+  });
 
   if (isLoading) return <div className="py-8 text-center"><Logo size={'sm'} mini={true} spin={true} />Loading...</div>;
 
@@ -20,19 +23,19 @@ export const TransactionTable = () => {
   return (
     <div className="border-border bg-muted overflow-hidden rounded-3xl border">
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full table-fixed">
           <thead className="bg-card border-border border-b">
-            <tr>
-              <th className="text-card-foreground px-6 py-4 text-left text-xs font-medium tracking-wider uppercase">
-                Description
+            <tr className="flex justify-around">
+              <th className="text-card-foreground px-6 py-4 text-xs font-medium tracking-wider uppercase flex-1 text-center min-w-0">
+                Name
               </th>
-              <th className="text-card-foreground px-6 py-4 text-left text-xs font-medium tracking-wider uppercase">
+              <th className="text-card-foreground px-6 py-4 text-xs font-medium tracking-wider uppercase flex-1 text-center min-w-0">
                 Category
               </th>
-              <th className="text-card-foreground px-6 py-4 text-left text-xs font-medium tracking-wider uppercase">
+              <th className="text-card-foreground px-6 py-4 text-xs font-medium tracking-wider uppercase flex-1 text-center min-w-0">
                 Date
               </th>
-              <th className="text-card-foreground px-6 py-4 text-right text-xs font-medium tracking-wider uppercase">
+              <th className="text-card-foreground px-6 py-4 text-xs font-medium tracking-wider uppercase flex-1 text-center min-w-0">
                 Amount
               </th>
             </tr>
@@ -44,14 +47,6 @@ export const TransactionTable = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Infinite scroll modal toggle, work in progress */}
-      {/*<div className="border-border border-t p-4">*/}
-      {/*  <div className="flex items-center justify-between text-sm">*/}
-      {/*    <span>Showing {entries.length} of 156 transactions</span>*/}
-      {/*    <ViewAllButton />*/}
-      {/*  </div>*/}
-      {/*</div>*/}
     </div>
   );
 };

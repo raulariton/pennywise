@@ -6,12 +6,12 @@ import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 
-const CalendarPickerWithDialog = () => {
-  const [date, setDate] = useState<Date | undefined>(undefined);
+const CalendarPickerWithDialog = (props: { dateValue: Date, onDateChange: (date: Date | undefined) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
-    setDate(selectedDate);
+    console.log('Selected date:', selectedDate);
+    props.onDateChange(selectedDate);
     if (selectedDate) {
       setIsOpen(false);
     }
@@ -25,7 +25,7 @@ const CalendarPickerWithDialog = () => {
             variant={'outline'}
             className={cn(
               'group hover:bg-background focus-visible:border-ring focus-visible:outline-ring/20 w-full justify-start px-3 text-left text-base font-normal outline-offset-0 focus-visible:outline-[3px]',
-              !date && 'text-muted-foreground',
+              !props.dateValue && 'text-muted-foreground',
               'shadow-sm'
             )}
           >
@@ -35,8 +35,8 @@ const CalendarPickerWithDialog = () => {
               className="text-muted-foreground/80 group-hover:text-foreground shrink-0 transition-colors"
               aria-hidden="true"
             />
-            <span className={cn('truncate', !date && 'text-muted-foreground')}>
-              {date ? format(date, 'dd/MM/yyyy') : 'Pick a date'}
+            <span className={cn('truncate', !props.dateValue && 'text-muted-foreground')}>
+              {props.dateValue ? format(props.dateValue, 'dd/MM/yyyy') : 'Pick a date'}
             </span>
           </Button>
         </DialogTrigger>
@@ -46,7 +46,7 @@ const CalendarPickerWithDialog = () => {
           </DialogHeader>
           <Calendar
             mode="single"
-            selected={date}
+            selected={props.dateValue}
             onSelect={handleDateSelect}
             className="scale-110 justify-self-center p-4"
             disabled={(date) => date > new Date()}
