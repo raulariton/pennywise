@@ -23,6 +23,17 @@ export interface Entry extends EntryFormData {
   updatedAt: string;
 }
 
+const useSWRCustom = (key, fetcher) => {
+  const { data, error, isLoading } = useSWR(key, fetcher, {
+    refreshInterval: 7500,
+  });
+  return {
+    data,
+    error,
+    isLoading,
+  };
+}
+
 /**
  * Custom hook to fetch all entries (income/expense transactions)
  * of a user.
@@ -36,7 +47,7 @@ export const useFetchEntries = ({
   requestConfig?: AxiosRequestConfig;
 }) => {
   const { fetcher, isReady } = useApiClientPrivateFetcher(requestConfig);
-  const { data, error, isLoading } = useSWR(isReady ? url : null, fetcher);
+  const { data, error, isLoading } = useSWRCustom(isReady ? url : null, fetcher);
   const toast = useToast();
 
   // display toast on error
@@ -88,7 +99,7 @@ export const useFetchDashboardMetrics = () => {
   const { fetcher, isReady } = useApiClientPrivateFetcher({
     params: { currency: 'RON' }
   });
-  const { data, error, isLoading } = useSWR(isReady ? '/entries/dashboard-metrics' : null, fetcher);
+  const { data, error, isLoading } = useSWRCustom(isReady ? '/entries/dashboard-metrics' : null, fetcher);
   const toast = useToast();
 
   // display toast on error

@@ -78,7 +78,6 @@ const AddEntryDialogContent = (props: { setIsOpen: (open: boolean) => void }) =>
     };
 
     try {
-      console.log('Submitting entry:', submissionData);
       await createEntry(submissionData);
       props.setIsOpen(false);
     } catch (err) {

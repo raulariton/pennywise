@@ -36,11 +36,13 @@ export const MonthlyCashFlowChart = () => {
   } satisfies ChartConfig;
 
   useEffect(() => {
-    toast.error(
-      typeof isError === 'string'
-        ? isError
-        : 'Failed to fetch monthly cash flow data. Please try again later.',
-    );
+    if (isError) {
+      toast.error(
+        typeof isError === 'string'
+          ? isError
+          : 'Failed to fetch monthly cash flow data. Please try again later.',
+      );
+    }
   }, [isError]);
 
   return (

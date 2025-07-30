@@ -52,7 +52,6 @@ const CategorySelectWithDialog = (props: { currentCategory: Category, setCategor
 
   const handleCategorySelect = (selectedCategory: string | undefined) => {
     props.setCategory(selectedCategory);
-    console.log(selectedCategory);
     if (selectedCategory) {
       setIsOpen(false);
     }

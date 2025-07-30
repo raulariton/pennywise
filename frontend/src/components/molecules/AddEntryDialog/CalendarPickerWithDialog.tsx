@@ -10,7 +10,6 @@ const CalendarPickerWithDialog = (props: { dateValue: Date, onDateChange: (date:
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
-    console.log('Selected date:', selectedDate);
     props.onDateChange(selectedDate);
     if (selectedDate) {
       setIsOpen(false);

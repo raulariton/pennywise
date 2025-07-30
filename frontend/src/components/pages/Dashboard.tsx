@@ -64,13 +64,13 @@ const ThisMonthIncomeDashboardCard = () => {
         <motion.div
           initial={{ opacity: 1, scale: 1 }}
           {...(existsChange && { variants: { hovered: { opacity: 0, scale: 1 } }, transition: { duration: 0.25 } })}
-          className="flex flex-col justify-between p-8 space-y-8"
+          className="flex flex-col h-fit justify-between p-8 space-y-8"
         >
           <CardHeader title="Income" subtitle="This Month" />
           <div className="flex flex-1 items-center space-x-3">
             {incomePercentChange > 2.5 && positiveIcon('trendUp')}
             {incomePercentChange < -2.5 && negativeIcon('trendDown')}
-            <span className="text-4xl font-semibold tracking-tight">{income.toFixed(2)} RON</span>
+            <span className="text-4xl font-semibold tracking-tight">{income} RON</span>
           </div>
         </motion.div>
 
@@ -130,7 +130,7 @@ const ThisMonthExpensesDashboardCard = () => {
           <div className="flex flex-1 items-center space-x-3">
             {expensePercentChange > 2.5 && negativeIcon('trendUp')}
             {expensePercentChange < -2.5 && positiveIcon('trendDown')}
-            <span className="text-4xl font-semibold tracking-tight">{expenses.toFixed(2)} RON</span>
+            <span className="text-4xl font-semibold tracking-tight">{expenses} RON</span>
           </div>
         </motion.div>
 
@@ -169,7 +169,6 @@ const TopSpendingCategoryDashboardCard = () => {
   const topCategory = metrics?.topSpendingCategoryThisMonth?.category;
   const categoryAmount = metrics?.topSpendingCategoryThisMonth?.amount || 0;
 
-  console.log('Top Spending Category:', topCategory, 'Amount:', categoryAmount);
   const { component: categoryIcon, color: categoryColor } = getCategoryIcon(topCategory);
 
   return (
