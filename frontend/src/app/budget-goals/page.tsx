@@ -29,6 +29,7 @@ import PageTemplate from '@/components/templates/PageTemplate';
 import BudgetOverviewChart from '@/components/organisms/BudgetOverviewChart';
 import BudgetList from '@/components/organisms/BudgetList';
 import GoalList from '@/components/organisms/GoalList';
+import { motion } from 'framer-motion';
 
 interface Transaction {
   label: string;
@@ -154,16 +155,22 @@ const Dashboard: React.FC = () => {
 
   return (
     <PageTemplate navTitle="Budget and Goals" navSubtitle="Track your budget and goals">
-      <div className="mx-auto max-w-7xl px-6 py-8">
-        <div className="mb-8">
-          <BudgetOverviewChart totalSpent={3000} totalRemaining={500} totalBudget={3500} />
-        </div>
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <BudgetList budgets={budgetData} />
+      <div className="min-h-screen">
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <div className="mb-8">
+            <BudgetOverviewChart totalSpent={3000} totalRemaining={500} totalBudget={3500} />
           </div>
-          <GoalList goals={goals} />
-        </div>
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <BudgetList budgets={budgetData} />
+            </div>
+            <GoalList goals={goals} />
+          </div>
+        </motion.section>
       </div>
     </PageTemplate>
   );

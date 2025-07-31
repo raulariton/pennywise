@@ -8,10 +8,9 @@ interface Props {
 }
 
 export const OverviewChartSection: React.FC<Props> = ({ data }) => (
-  <section className="mb-16 rounded-[2rem] border bg-white/70 p-12 shadow-xl backdrop-blur-2xl transition-all duration-500 hover:-translate-y-2 hover:bg-white/80 hover:shadow-2xl">
-    <div className="mb-10 text-center">
-      <h2 className="mb-3 text-3xl font-light tracking-tight text-slate-900">Monthly Overview</h2>
-      <p className="text-lg font-light text-slate-600">Expenses vs Budget Comparison</p>
+  <section className="mb-16 rounded-2xl border border-border bg-muted p-12 shadow-xl transition-all duration-500">
+    <div className="mb-10">
+      <h2 className="mb-4 text-2xl font-light">Your spending this month</h2>
     </div>
     <div className="h-[28rem]">
       <ResponsiveContainer width="100%" height="100%">

@@ -20,6 +20,7 @@ export const BudgetPieChart: React.FC<BudgetPieChartProps> = ({ data, totalBudge
           innerRadius={70}
           outerRadius={100}
           labelLine={false}
+          stroke="none"
         >
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -37,8 +38,8 @@ export const BudgetPieChart: React.FC<BudgetPieChartProps> = ({ data, totalBudge
       </PieChart>
     </ResponsiveContainer>
     <div className="absolute text-center">
-      <p className="text-sm text-gray-500">Total Budget</p>
-      <p className="text-xl font-bold text-gray-800">${totalBudget.toLocaleString()}</p>
+      <p className="text-sm text-muted-foreground">Total Budget</p>
+      <p className="text-3xl font-bold">${totalBudget.toLocaleString()}</p>
     </div>
   </div>
 );

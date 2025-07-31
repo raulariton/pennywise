@@ -16,8 +16,8 @@ const BudgetOverviewChart: React.FC<Props> = ({ totalSpent, totalRemaining, tota
   ];
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-      <h2 className="mb-4 text-xl font-bold text-gray-800">Budget Overview</h2>
+    <div className="rounded-2xl border border-border bg-muted p-6 shadow-sm">
+      <h2 className="mb-4 text-xl font-light">Budget Overview</h2>
       <BudgetPieChart data={chartData} totalBudget={totalBudget} />
       <BudgetLegend />
     </div>

@@ -8,6 +8,8 @@ entryRoutes.use('/', verifyTokenMiddleware);
 
 entryRoutes.post('/', EntryController.createEntry);
 entryRoutes.get('/', EntryController.getEntries);
+entryRoutes.get('/monthly-cash-flow', EntryController.getMonthlyCashFlow);
+entryRoutes.get('/dashboard-metrics', EntryController.getDashboardMetrics);
 entryRoutes.put('/:id', EntryController.updateEntry);
 
 export default entryRoutes;

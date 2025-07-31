@@ -25,7 +25,7 @@ export const PieChartWithCenterValue: React.FC<PieChartWithCenterValueProps> = (
             cy="50%"
             innerRadius={45}
             outerRadius={80}
-            paddingAngle={2}
+            stroke="none"
             dataKey="amount"
             onMouseEnter={(_, index) => setActiveIndex(index)}
             onMouseLeave={() => setActiveIndex(null)}
@@ -35,8 +35,6 @@ export const PieChartWithCenterValue: React.FC<PieChartWithCenterValueProps> = (
                 key={`cell-${index}`}
                 fill={entry.color}
                 className="cursor-pointer transition-opacity duration-200 hover:opacity-80"
-                stroke="#ffffff"
-                strokeWidth={1}
               />
             ))}
           </Pie>
@@ -46,12 +44,12 @@ export const PieChartWithCenterValue: React.FC<PieChartWithCenterValueProps> = (
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
         {activeIndex !== null ? (
           <>
-            <p className="text-sm text-gray-500">Amount</p>
+            <p className="text-sm text-muted-foreground">Amount</p>
             <CurrencyText amount={data[activeIndex].amount} />
           </>
         ) : (
           <>
-            <p className="text-sm text-gray-500">Total</p>
+            <p className="text-sm text-muted-foreground">Total</p>
             <CurrencyText amount={total} />
           </>
         )}

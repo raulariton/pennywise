@@ -15,9 +15,9 @@ import { useAuth } from '@/context/AuthContext';
 const SidebarLinks = [
   { icon: <House />, label: 'Dashboard', href: '/dashboard' },
   { icon: <BanknoteArrowUp />, label: 'Incomes', href: '#' },
-  { icon: <BanknoteArrowDown />, label: 'Expenses', href: '#' },
+  { icon: <BanknoteArrowDown />, label: 'Expenses', href: '/expenses' },
   { icon: <TrendingUp />, label: 'Statistics', href: '#' },
-  { icon: <Goal />, label: 'Budgets & Goals', href: '#' },
+  { icon: <Goal />, label: 'Budgets & Goals', href: '/budget-goals' },
 ];
 
 const Sidebar = () => {

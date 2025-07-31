@@ -2,6 +2,7 @@ import apiClient from '@/utils/apiClient';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
 import useRefreshToken from '@/hooks/useRefreshToken';
+import { AxiosRequestConfig } from 'axios';
 
 /**
  * Custom hook to get an API client with automatic token refresh
@@ -100,7 +101,7 @@ const useApiClientPrivate = () => {
 export default useApiClientPrivate;
 
 // fetch hook
-export const useApiClientPrivateFetcher = () => {
+export const useApiClientPrivateFetcher = (config?: AxiosRequestConfig) => {
   const { apiClient, isReady } = useApiClientPrivate();
 
   // fetcher function for SWR
@@ -108,9 +109,8 @@ export const useApiClientPrivateFetcher = () => {
     if (!isReady) {
       throw new Error("API client is not ready");
     }
-    const response = await apiClient.get(url);
+    const response = await apiClient.get(url, config);
     return response.data;
-    // TODO: add query params support
   }
 
   return { fetcher, isReady };

@@ -90,7 +90,6 @@ export const useToast = () => {
           description={tost.description}
           button={{
             label: tost.button.label,
-            onClick: () => console.log('Button clicked'),
           }}
         />
       ),
@@ -107,7 +106,6 @@ export const useToast = () => {
         description={tost.description}
         button={{
           label: tost.button.label,
-          onClick: () => console.log('Button clicked'),
         }}
       />
     ));

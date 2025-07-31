@@ -3,6 +3,9 @@
 import React from 'react';
 import PageTemplate from '@/components/templates/PageTemplate';
 import { ExpensesMetrics } from '../organisms/ExpenseMetrics';
+import { motion } from 'framer-motion';
+import { OverviewChartSection } from '@/components/molecules/OverviewChartSection';
+import { MetricCardsGrid } from '@/components/molecules/MetricCardsGrid';
 
 const mainData = [
   { month: 'Jan', expenses: 2800, budget: 4800 },
@@ -47,11 +50,15 @@ const cards = [
 export default function ExpensesDashboard() {
   return (
     <PageTemplate navTitle="Expenses" navSubtitle="Track your expenses">
-      <div className="relative min-h-screen overflow-hidden">
-        {/* Background */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.05),transparent)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(120,119,198,0.05),transparent)]" />
-        <ExpensesMetrics mainData={mainData} cards={cards} />
+      <div className="min-h-screen">
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <OverviewChartSection data={mainData} />
+          <MetricCardsGrid cards={cards} />
+        </motion.section>
       </div>
     </PageTemplate>
   );

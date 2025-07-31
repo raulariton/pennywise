@@ -1,23 +1,15 @@
+import { cn } from '@/lib/utils';
+import { motion, MotionConfig } from 'framer-motion';
 import React from 'react';
-import { motion, MotionConfig } from 'motion/react';
-import { CardFooter } from '../molecules/CardFooter';
-import { CardHeader } from '../molecules/CardHeader';
-import { DashboardGraph } from './DashboardCardGraph';
+import { CardHeader } from '@/components/molecules/CardHeader';
+import { CardFooter } from '@/components/molecules/CardFooter';
 
-export const DashboardCard = ({
-  title,
-  amount,
-  change,
-  period = 'vs last month',
-  data = [65, 78, 52, 89, 73, 95, 68, 84, 76, 92, 58, 81],
+const DashboardCardTemplate = ({
   className,
+  children,
 }: {
-  title: string;
-  amount: string;
-  change: number;
-  period?: string;
-  data?: number[];
   className?: string;
+  children?: React.ReactNode;
 }) => {
   return (
     <MotionConfig
@@ -29,7 +21,10 @@ export const DashboardCard = ({
     >
       <motion.div
         whileHover="hovered"
-        className={`group border-border hover:border-card relative w-full max-w-sm overflow-hidden rounded-3xl border transition-colors duration-500 ${className}`}
+        className={cn(
+          `group border-border hover:border-card relative w-full max-w-sm overflow-hidden rounded-3xl border transition-colors duration-500`,
+          className,
+        )}
       >
         <motion.div
           initial={{ opacity: 1, scale: 1 }}
@@ -37,11 +32,10 @@ export const DashboardCard = ({
           transition={{ duration: 0.4 }}
           className="flex h-52 flex-col justify-between p-8"
         >
-          <CardHeader title={title} />
+          <CardHeader title="" />
           <div className="flex flex-1 items-center">
             <span className="text-4xl font-semibold tracking-tight">{amount}</span>
           </div>
-          <CardFooter change={change} period={period} />
         </motion.div>
 
         <motion.div
@@ -49,9 +43,11 @@ export const DashboardCard = ({
           variants={{ hovered: { opacity: 1, scale: 1 } }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <DashboardGraph data={data} />
+          on hover
         </motion.div>
       </motion.div>
     </MotionConfig>
   );
 };
+
+export default DashboardCardTemplate;

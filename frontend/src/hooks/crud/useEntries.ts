@@ -1,16 +1,18 @@
-import useSWR, { mutate } from 'swr';
-import { useEffect, useState } from 'react';
-import useApiClientPrivate, { useApiClientPrivateFetcher } from '@/hooks/useApiClientPrivate';
 import { Category } from '@/hooks/crud/useCategories';
+import useApiClientPrivate, { useApiClientPrivateFetcher } from '@/hooks/useApiClientPrivate';
 import useToast from '@/hooks/useToast';
+import { AxiosRequestConfig } from 'axios';
+import { useEffect, useState } from 'react';
+import useSWR, { mutate } from 'swr';
 
 // types
 export interface EntryFormData {
   type: 'income' | 'expense';
+  name: string;
   amount: number;
   currency: string;
   description?: string;
-  timestamp: string;
+  timestamp: Date;
   category: Category;
 }
 
@@ -21,14 +23,31 @@ export interface Entry extends EntryFormData {
   updatedAt: string;
 }
 
+const useSWRCustom = (key, fetcher) => {
+  const { data, error, isLoading } = useSWR(key, fetcher, {
+    refreshInterval: 7500,
+  });
+  return {
+    data,
+    error,
+    isLoading,
+  };
+}
+
 /**
  * Custom hook to fetch all entries (income/expense transactions)
  * of a user.
  * The request includes the user's access token stored in the auth context.
  */
-export const useFetchEntries = () => {
-  const { fetcher, isReady } = useApiClientPrivateFetcher();
-  const { data, error, isLoading } = useSWR(isReady ? '/entries' : null, fetcher);
+export const useFetchEntries = ({
+  url,
+  requestConfig,
+}: {
+  url: string;
+  requestConfig?: AxiosRequestConfig;
+}) => {
+  const { fetcher, isReady } = useApiClientPrivateFetcher(requestConfig);
+  const { data, error, isLoading } = useSWRCustom(isReady ? url : null, fetcher);
   const toast = useToast();
 
   // display toast on error
@@ -58,7 +77,7 @@ export const useCreateEntry = () => {
       const response = await apiClient.post('/entries', entryData);
       const newEntry = response.data;
 
-      await mutate('/entries');
+      await mutate(() => true); // revalidate all SWR keys
 
       return newEntry;
     } catch (error) {
@@ -75,3 +94,24 @@ export const useCreateEntry = () => {
     isError: error,
   };
 };
+
+export const useFetchDashboardMetrics = () => {
+  const { fetcher, isReady } = useApiClientPrivateFetcher({
+    params: { currency: 'RON' }
+  });
+  const { data, error, isLoading } = useSWRCustom(isReady ? '/entries/dashboard-metrics' : null, fetcher);
+  const toast = useToast();
+
+  // display toast on error
+  useEffect(() => {
+    if (error) {
+      toast.error('Failed to fetch dashboard metrics. Please try again later.');
+    }
+  }, [error]);
+
+  return {
+    metrics: data,
+    isLoading: isLoading,
+    isError: error,
+  };
+}

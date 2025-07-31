@@ -9,6 +9,6 @@ interface ChartLegendItemProps {
 export const ChartLegendItem: React.FC<ChartLegendItemProps> = ({ color, label }) => (
   <div className="flex items-center space-x-2">
     <ColorDot color={color} />
-    <span className="text-sm text-gray-600">{label}</span>
+    <span className="text-sm text-muted-foreground">{label}</span>
   </div>
 );

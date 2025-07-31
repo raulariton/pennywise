@@ -10,5 +10,5 @@ export const CurrencyText: React.FC<CurrencyTextProps> = ({ amount, className = 
     currency: 'USD',
   }).format(amount);
 
-  return <span className={`text-sm font-semibold text-gray-800 ${className}`}>{formatted}</span>;
+  return <span className={`text-sm font-semibold ${className}`}>{formatted}</span>;
 };

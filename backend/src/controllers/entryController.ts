@@ -14,16 +14,23 @@ deleting an entry,
 */
 
 interface DashboardMetrics {
-  incomeThisMonth: number;
-  expensesThisMonth: number;
+  totalIncomeThisMonth: number;
+  totalExpensesThisMonth: number;
+
+  incomeDifference: number;
+  incomePercentChange: number;
+  expenseDifference: number;
+  expensePercentChange: number;
+
   insights: {
-    incomeDifference: number;
-    expenseDifference: number;
-    incomePercentChange: number;
-    expensePercentChange: number;
-    message: string;
+    income: string;
+    expenses: string;
   };
-  topSpendingCategoryThisMonth: { category: string; amount: number } | null;
+
+  topSpendingCategoryThisMonth: {
+    category: string;
+    amount: number;
+  } | null;
 }
 
 export class EntryController {
@@ -40,11 +47,9 @@ export class EntryController {
     }
 
     if (!type || !name || !amount || !currency || !timestamp || !category) {
-      res
-        .status(400)
-        .json({
-          error: 'Type, name, amount, currency, timestamp, and category name are required.',
-        });
+      res.status(400).json({
+        error: 'Type, name, amount, currency, timestamp, and category name are required.',
+      });
       return;
     }
 
@@ -274,123 +279,160 @@ export class EntryController {
     // get entries from current month (if any)
     // and from last month (if any)
     try {
-      const firstDayOfYear = new Date(new Date().getFullYear(), 0, 1);
-      const lastDayOfYear = new Date(new Date().getFullYear() + 1, 0, 1);
+      // startDate: first day of last month
+      // endDate: last day of last month
+      const startDate = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1);
+      const endDate = new Date();
 
-      const entriesThisYear = await entryRepository.find({
+      const entriesPastTwoMonths = await entryRepository.find({
         where: {
           user: { id: userId },
-          timestamp: Between(firstDayOfYear, lastDayOfYear),
+          timestamp: Between(startDate, endDate),
         },
         order: { timestamp: 'ASC' },
         relations: { category: true },
       });
 
-      if (entriesThisYear.length === 0) {
+      if (entriesPastTwoMonths.length === 0) {
         res.status(200).json({
-          incomeThisMonth: 0,
-          expensesThisMonth: 0,
+          totalIncomeThisMonth: 0,
+          totalExpensesThisMonth: 0,
+
+          incomeDifference: 0,
+          incomePercentChange: 0,
+          expenseDifference: 0,
+          expensePercentChange: 0,
+
+          // frontend displays 'No insights available right now.'
+          // after seeing that string is empty
           insights: {
-            incomeDifference: 0,
-            expenseDifference: 0,
-            incomePercentChange: 0,
-            expensePercentChange: 0,
-            message: 'Try adding some entries.',
+            income: '',
+            expenses: '',
           },
+
           topSpendingCategoryThisMonth: null,
         } satisfies DashboardMetrics);
         return;
       }
 
-      let incomeThisMonth: number = 0;
-      let expenseThisMonth: number = 0;
-      let incomesThisYear: { month: string; income: number }[] = [];
-      let expensesThisYear: { month: string; expense: number }[] = [];
-      const currentMonth = new Date().getMonth();
-      let categoryExpenseRanking: { category: string; amount: number }[] = [];
-
-      for (const entry of entriesThisYear) {
-        // convert currency if doesn't match the given preferred currency
+      // filter entries from this month
+      const entriesThisMonth = entriesPastTwoMonths.filter((entry) => {
+        const entryDate = new Date(entry.timestamp);
+        return entryDate.getMonth() === new Date().getMonth();
+      });
+      // convert all entries to the preferred currency
+      for (const entry of entriesThisMonth) {
         if (entry.currency !== currency) {
           try {
             entry.amount = await convertCurrency(entry.amount, entry.currency, currency);
           } catch (error) {
             res.status(500).json({ error: `Error converting currency: ${error}` });
-            return;
-          }
-        }
-
-        // round the amount to 2 decimal places
-        entry.amount = Math.round(entry.amount * 100) / 100;
-
-        // extract month from timestamp
-        const entryMonth = new Date(entry.timestamp).getMonth();
-
-        if (entryMonth === currentMonth) {
-          if (entry.type === 'income') {
-            incomeThisMonth += entry.amount;
-          } else if (entry.type === 'expense') {
-            expenseThisMonth += entry.amount;
-
-            // add to the category ranking for expenses
-            const existingCategory = categoryExpenseRanking.find(
-              (c) => c.category === entry.category.name,
-            );
-            if (existingCategory) {
-              existingCategory.amount += entry.amount;
-            } else {
-              categoryExpenseRanking.push({ category: entry.category.name, amount: entry.amount });
-            }
-          }
-        }
-
-        // add to the yearly income and expense arrays
-        const monthName = new Date(entry.timestamp).toLocaleString('en', { month: 'short' });
-
-        if (entry.type === 'income') {
-          // check if the month already exists in the incomesThisYear array
-          const existingIncome = incomesThisYear.find((i) => i.month === monthName);
-          if (existingIncome) {
-            // if exists, add to the existing amount
-            existingIncome.income += entry.amount;
-          } else {
-            // if not exists, push a new entry
-            incomesThisYear.push({ month: monthName, income: entry.amount });
-          }
-        } else if (entry.type === 'expense') {
-          // check if the month already exists in the expensesThisYear array
-          const existingExpense = expensesThisYear.find((e) => e.month === monthName);
-          if (existingExpense) {
-            // if exists, add to the existing amount
-            existingExpense.expense += entry.amount;
-          } else {
-            // if not exists, push a new entry
-            expensesThisYear.push({ month: monthName, expense: entry.amount });
           }
         }
       }
 
-      // get the top spending category for this month
-      const topSpendingCategoryThisMonth =
-        categoryExpenseRanking.sort((a, b) => b.amount - a.amount)[0] || null;
+      // filter entries from the past two months
+      const entriesLastMonth = entriesPastTwoMonths.filter((entry) => {
+        const entryDate = new Date(entry.timestamp);
+        return entryDate.getMonth() === new Date().getMonth() - 1;
+      });
+      // convert all entries to the preferred currency
+      for (const entry of entriesLastMonth) {
+        if (entry.currency !== currency) {
+          try {
+            entry.amount = await convertCurrency(entry.amount, entry.currency, currency);
+          } catch (error) {
+            res.status(500).json({ error: `Error converting currency: ${error}` });
+          }
+        }
+      }
 
+      // calculate total income and expenses for this month
+      const totalIncomeThisMonth = entriesThisMonth
+        .filter((entry) => entry.type === 'income')
+        .reduce((total, entry) => total + entry.amount, 0);
+
+      const expensesThisMonth = entriesThisMonth.filter((entry) => entry.type === 'expense');
+      const totalExpensesThisMonth = expensesThisMonth.reduce(
+        (total, entry) => total + entry.amount,
+        0,
+      );
+
+      // calculate total income and expenses for last month
+      const totalIncomeLastMonth = entriesLastMonth
+        .filter((entry) => entry.type === 'income')
+        .reduce((total, entry) => total + entry.amount, 0);
+      const totalExpensesLastMonth = entriesLastMonth
+        .filter((entry) => entry.type === 'expense')
+        .reduce((total, entry) => total + entry.amount, 0);
+
+
+      // get all expense categories
+      const expenseCategories = expensesThisMonth.reduce((acc, entry) => {
+        // find the category in the accumulator
+        const category = acc.find((cat) => cat.category === entry.category.name);
+
+        if (category) {
+          // if the category exists, add the amount to it
+          category.amount += entry.amount;
+        } else {
+          // if the category does not exist, create a new one
+          acc.push({ category: entry.category.name, amount: entry.amount });
+        }
+        return acc;
+      }, [] as { category: string; amount: number }[]);
+
+      // sort expense categories by amount in descending order to find the top spending category
+      expenseCategories.sort((a, b) => b.amount - a.amount);
+
+      // get the top spending category for this month
+      // but first round the amount to 2 decimal places
+      if (expenseCategories.length > 0) {
+        expenseCategories[0].amount = Math.round(expenseCategories[0].amount * 100) / 100;
+      }
+      const topSpendingCategoryThisMonth = expenseCategories.length > 0 ? expenseCategories[0] : null;
+
+      // there is a difference only when the total income or expenses between the two months
+      // is not 0
+      let incomeDifference = 0, expenseDifference = 0;
+      let incomePercentChange = 0, expensePercentChange = 0;
+      if (totalIncomeThisMonth === 0 || totalIncomeLastMonth === 0) {
+        incomeDifference = 0;
+        incomePercentChange = 0;
+      } else {
+        incomeDifference = totalIncomeThisMonth - totalIncomeLastMonth;
+        incomePercentChange = (incomeDifference / totalIncomeLastMonth) * 100;
+      }
+      if (totalExpensesLastMonth === 0 || totalExpensesLastMonth === 0) {
+        expenseDifference = 0;
+        expensePercentChange = 0;
+      } else {
+        expenseDifference = totalExpensesThisMonth - totalExpensesLastMonth;
+        expensePercentChange = (expenseDifference / totalExpensesLastMonth) * 100;
+      }
+
+
+      // return the dashboard metrics
       res.status(200).json({
-        incomeThisMonth: incomeThisMonth,
-        expensesThisMonth: expenseThisMonth,
+        totalIncomeThisMonth: totalIncomeThisMonth,
+        totalExpensesThisMonth: totalExpensesThisMonth,
+
+        incomeDifference: incomeDifference,
+        incomePercentChange: incomePercentChange,
+        expenseDifference: expenseDifference,
+        expensePercentChange: expensePercentChange,
+
         insights: getPersonalizedMessageFromMonthComparison({
-          thisMonthData: {
-            month: new Date().toLocaleString('en', { month: 'long' }),
-            income: incomeThisMonth,
-            expense: expenseThisMonth,
-          },
-          lastMonthData: {
-            // TODO: clean code, find last month data bc it is wrong
-            income.find((i) => i.month === new Date().toLocaleString('en', { month: 'long' })) ||
-          },
+          totalIncomeThisMonth: totalIncomeThisMonth,
+          totalExpensesThisMonth: totalExpensesThisMonth,
+          totalIncomeLastMonth: totalIncomeLastMonth,
+          totalExpensesLastMonth: totalExpensesLastMonth,
         }),
-        topSpendingCategoryThisMonth: topSpendingCategoryThisMonth,
+
+        topSpendingCategoryThisMonth,
       } satisfies DashboardMetrics);
-      return;
+
+
     } catch (error) {
       res
         .status(500)
@@ -434,43 +476,46 @@ function fillArrayWithMonths(array: { month: string; income: number; expense: nu
   }
 }
 
-interface monthData {
-  month: string;
-  income: number;
-  expense: number;
-}
-
 function getPersonalizedMessageFromMonthComparison({
-  thisMonthData,
-  lastMonthData,
+  totalIncomeThisMonth,
+  totalExpensesThisMonth,
+  totalIncomeLastMonth,
+  totalExpensesLastMonth,
 }: {
-  thisMonthData: monthData;
-  lastMonthData: monthData;
+  totalIncomeThisMonth: number;
+  totalExpensesThisMonth: number;
+  totalIncomeLastMonth: number;
+  totalExpensesLastMonth: number;
 }) {
-  const incomeDifference = thisMonthData.income - lastMonthData.income;
-  const expenseDifference = thisMonthData.expense - lastMonthData.expense;
-  const incomePercentChange = (incomeDifference / lastMonthData.income) * 100;
-  const expensePercentChange = (expenseDifference / lastMonthData.expense) * 100;
+  const incomeDifference = totalIncomeThisMonth - totalIncomeLastMonth;
+  const incomePercentChange = (incomeDifference / totalIncomeLastMonth) * 100;
+  const expenseDifference = totalExpensesThisMonth - totalExpensesLastMonth;
+  const expensePercentChange = (expenseDifference / totalExpensesLastMonth) * 100;
 
-  let incomeInsight, expenseInsight;
+  let incomeInsight = '', expenseInsight = '';
 
-  if (incomePercentChange >= 2.5) {
-    incomeInsight = `Nice! Your income has increased by ${incomeDifference} (${incomePercentChange.toFixed(2)} increase) compared to last month.`;
-  } else if (incomePercentChange <= 2.5) {
-    incomeInsight = `You've earned ${Math.abs(incomeDifference)} (${incomePercentChange.toFixed(2)} decrease) less than last month.`;
+  if (totalIncomeThisMonth === 0 || totalIncomeLastMonth === 0) {
+    incomeInsight = 'No insights available right now.';
+  } else {
+    if (incomePercentChange >= 2.5) {
+      incomeInsight = `Nice! Your income has increased by ${incomePercentChange.toFixed(2)}% compared to last month.`;
+    } else if (incomePercentChange <= 2.5) {
+      incomeInsight = `You've earned ${incomePercentChange.toFixed(2)}% less than last month.`;
+    }
   }
 
-  if (expensePercentChange >= 2.5) {
-    expenseInsight = `Heads up! You've spent ${expenseDifference} (${expensePercentChange.toFixed(2)} increase) compared to last month.`;
-  } else if (expensePercentChange <= 2.5) {
-    expenseInsight = `So far so good! You've spent ${Math.abs(expenseDifference)} (${incomeDifference} decrease) compared to last month.`;
+  if (totalExpensesThisMonth === 0 || totalExpensesLastMonth === 0) {
+    expenseInsight = 'No insights available right now.';
+  } else {
+    if (expensePercentChange >= 2.5) {
+      expenseInsight = `Heads up! You've spent ${expensePercentChange.toFixed(2)}% more compared to last month.`;
+    } else if (expensePercentChange <= 2.5) {
+      expenseInsight = `So far so good! You've spent ${expensePercentChange.toFixed(2)}% less compared to last month.`;
+    }
   }
 
   return {
-    incomeDifference,
-    expenseDifference,
-    incomePercentChange,
-    expensePercentChange,
-    insightMessages: [ incomeInsight, expenseInsight ]
+    income: incomeInsight,
+    expenses: expenseInsight,
   };
 }

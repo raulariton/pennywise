@@ -12,8 +12,8 @@ export const GoalHeader: React.FC<GoalHeaderProps> = ({ title, deadline, categor
     <div className="flex items-start space-x-3">
       <CategoryIcon category={category} />
       <div>
-        <h3 className="text-sm font-semibold text-gray-800">{title}</h3>
-        <p className="mt-1 text-xs text-gray-500">{deadline}</p>
+        <h3 className="font-semibold">{title}</h3>
+        <p className="mt-1 text-sm text-muted-foreground">until {deadline}</p>
       </div>
     </div>
   </div>

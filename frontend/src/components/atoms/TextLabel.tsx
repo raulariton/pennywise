@@ -5,5 +5,5 @@ interface TextLabelProps {
 }
 
 export const TextLabel: React.FC<TextLabelProps> = ({ children, className = '' }) => (
-  <span className={`text-sm text-gray-600 ${className}`}>{children}</span>
+  <span className={`text-muted-foreground ${className}`}>{children}</span>
 );

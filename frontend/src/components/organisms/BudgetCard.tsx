@@ -53,7 +53,7 @@ export const BudgetCard: React.FC<BudgetCardProps> = ({
 
   return (
     <div
-      className="relative mx-auto w-full transform cursor-pointer overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+      className="relative mx-auto w-full transform cursor-pointer overflow-hidden rounded-2xl border border-border bg-muted shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       role="button"
@@ -65,13 +65,13 @@ export const BudgetCard: React.FC<BudgetCardProps> = ({
           isHovered ? 'translate-y-2 opacity-0' : 'translate-y-0 opacity-100'
         }`}
       >
-        <h3 className="mb-4 text-xl font-bold text-gray-800">{category}</h3>
+        <h3 className="mb-4 text-xl font-bold">{category}</h3>
         <BudgetSummary spent={spent} budget={budget} remaining={remaining} />
 
         <div className="mt-4">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs text-gray-500">Progress</span>
-            <span className="text-xs font-medium text-gray-700">
+            <span className="text-sm">Spent</span>
+            <span className="text-base font-bold">
               {progressPercentage.toFixed(1)}%
             </span>
           </div>
@@ -81,7 +81,7 @@ export const BudgetCard: React.FC<BudgetCardProps> = ({
 
       {/* Back Layer */}
       <div
-        className={`absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 p-6 transition-all duration-500 ease-in-out ${
+        className={`absolute inset-0 bg-input p-6 transition-all duration-500 ease-in-out ${
           isHovered ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0'
         }`}
       >
