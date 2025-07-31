@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import AddEntryFloatingButton from '@/components/atoms/AddEntryFloatingButton';
 import AddEntryDialogContent from '@/components/organisms/AddEntryDialogContent';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 
-const AddEntryDialog = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
+const AddEntryDialog = ({
+  open,
+  setOpen,
+  trigger,
+}: {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  trigger?;
+}) => {
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger>
-        <AddEntryFloatingButton/>
-      </DialogTrigger>
-      <AddEntryDialogContent
-        setIsOpen={setIsOpen}
-      />
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <AddEntryDialogContent setIsOpen={setOpen} />
     </Dialog>
   );
 };
