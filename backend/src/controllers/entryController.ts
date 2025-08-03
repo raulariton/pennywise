@@ -72,7 +72,7 @@ export class EntryController {
     }
 
     const entry = Object.assign(new Entry(), {
-      type,
+      type:type,
       name: name.trim(),
       amount,
       currency,
@@ -92,6 +92,69 @@ export class EntryController {
     } catch (error) {
       res.status(500).json({ error: `Internal server error while creating entry: ${error}` });
       return;
+    }
+  }
+
+  static async createBulkEntry(req: Request, res: Response): Promise<void> {
+    const { entries } = req.body;
+    const userId = (req as any).user?.id;
+
+    if (!userId) {
+      res.status(401).json({ error: 'Unauthorized: User ID is required.' });
+      return;
+    }
+
+    if (!Array.isArray(entries) || entries.length === 0) {
+      res.status(400).json({ error: 'Entries must be a non-empty array.' });
+      return;
+    }
+
+    const categoryRepository = dataSource.getRepository(Category);
+    const entryRepository = dataSource.getRepository(Entry);
+
+    try {
+      const savedEntries = await Promise.all(
+        entries.map(async (entryData: any) => {
+          const { type, name, amount, currency, description, timestamp, category } = entryData;
+
+          // Validate required fields
+          if (!type || !name || !amount || !currency || !timestamp || !category) {
+            throw new Error(
+              'Type, name, amount, currency, timestamp, and category name are required for each entry.',
+            );
+          }
+
+          // Find category
+          const categoryEntity = await categoryRepository.findOne({
+            where: { name: category },
+          });
+
+          if (!categoryEntity) {
+            throw new Error(`Category "${category}" doesn't exist.`);
+          }
+
+          // Create entry
+          const entry = Object.assign(new Entry(), {
+            type,
+            name: name.trim(),
+            amount,
+            currency,
+            timestamp,
+            ...(description && description.trim() ? { description } : {}),
+            user: { id: userId },
+            category: { id: categoryEntity.id },
+          });
+
+          return entryRepository.save(entry);
+        }),
+      );
+
+      res.status(201).json(savedEntries);
+    } catch (error: any) {
+      res.status(500).json({
+        error: 'Failed to create bulk entries',
+        details: error.message || error,
+      });
     }
   }
 
@@ -367,21 +430,23 @@ export class EntryController {
         .filter((entry) => entry.type === 'expense')
         .reduce((total, entry) => total + entry.amount, 0);
 
-
       // get all expense categories
-      const expenseCategories = expensesThisMonth.reduce((acc, entry) => {
-        // find the category in the accumulator
-        const category = acc.find((cat) => cat.category === entry.category.name);
+      const expenseCategories = expensesThisMonth.reduce(
+        (acc, entry) => {
+          // find the category in the accumulator
+          const category = acc.find((cat) => cat.category === entry.category.name);
 
-        if (category) {
-          // if the category exists, add the amount to it
-          category.amount += entry.amount;
-        } else {
-          // if the category does not exist, create a new one
-          acc.push({ category: entry.category.name, amount: entry.amount });
-        }
-        return acc;
-      }, [] as { category: string; amount: number }[]);
+          if (category) {
+            // if the category exists, add the amount to it
+            category.amount += entry.amount;
+          } else {
+            // if the category does not exist, create a new one
+            acc.push({ category: entry.category.name, amount: entry.amount });
+          }
+          return acc;
+        },
+        [] as { category: string; amount: number }[],
+      );
 
       // sort expense categories by amount in descending order to find the top spending category
       expenseCategories.sort((a, b) => b.amount - a.amount);
@@ -391,12 +456,15 @@ export class EntryController {
       if (expenseCategories.length > 0) {
         expenseCategories[0].amount = Math.round(expenseCategories[0].amount * 100) / 100;
       }
-      const topSpendingCategoryThisMonth = expenseCategories.length > 0 ? expenseCategories[0] : null;
+      const topSpendingCategoryThisMonth =
+        expenseCategories.length > 0 ? expenseCategories[0] : null;
 
       // there is a difference only when the total income or expenses between the two months
       // is not 0
-      let incomeDifference = 0, expenseDifference = 0;
-      let incomePercentChange = 0, expensePercentChange = 0;
+      let incomeDifference = 0,
+        expenseDifference = 0;
+      let incomePercentChange = 0,
+        expensePercentChange = 0;
       if (totalIncomeThisMonth === 0 || totalIncomeLastMonth === 0) {
         incomeDifference = 0;
         incomePercentChange = 0;
@@ -411,7 +479,6 @@ export class EntryController {
         expenseDifference = totalExpensesThisMonth - totalExpensesLastMonth;
         expensePercentChange = (expenseDifference / totalExpensesLastMonth) * 100;
       }
-
 
       // return the dashboard metrics
       res.status(200).json({
@@ -432,8 +499,6 @@ export class EntryController {
 
         topSpendingCategoryThisMonth,
       } satisfies DashboardMetrics);
-
-
     } catch (error) {
       res
         .status(500)
@@ -493,7 +558,8 @@ function getPersonalizedMessageFromMonthComparison({
   const expenseDifference = totalExpensesThisMonth - totalExpensesLastMonth;
   const expensePercentChange = (expenseDifference / totalExpensesLastMonth) * 100;
 
-  let incomeInsight = '', expenseInsight = '';
+  let incomeInsight = '',
+    expenseInsight = '';
 
   if (totalIncomeThisMonth === 0 || totalIncomeLastMonth === 0) {
     incomeInsight = 'No insights available right now.';

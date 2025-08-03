@@ -70,6 +70,7 @@ export class FinancialGoalController {
 
     try {
       const goalRepo = dataSource.getRepository(FinancialGoal);
+
       const goal = await goalRepo.findOne({
         where: { id: parseInt(id, 10), user: { id: userId } },
       });
@@ -79,12 +80,21 @@ export class FinancialGoalController {
         return;
       }
 
-      if (title !== undefined) goal.title = title;
-      if (targetAmount !== undefined) goal.targetAmount = targetAmount;
-      if (currentAmount !== undefined) goal.currentAmount = currentAmount;
-      if (dueDate !== undefined) goal.dueDate = dueDate ? new Date(dueDate) : null;
+      const updates: Partial<FinancialGoal> = {};
 
-      const updated = await goalRepo.save(goal);
+      if (title !== undefined) updates.title = title;
+      if (targetAmount !== undefined) updates.targetAmount = targetAmount;
+      if (currentAmount !== undefined && currentAmount !== null) {
+        updates.currentAmount = currentAmount;
+      }
+      if (dueDate !== undefined) {
+        updates.dueDate = dueDate ? new Date(dueDate) : null;
+      }
+
+      // Only update fields explicitly provided
+      await goalRepo.update(goal.id, updates);
+
+      const updated = await goalRepo.findOneBy({ id: goal.id });
       res.json(updated);
     } catch (err) {
       res.status(500).json({ error: 'Failed to update goal', details: err });
