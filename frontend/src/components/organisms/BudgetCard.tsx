@@ -1,13 +1,14 @@
 // components/organisms/BudgetCard.tsx
 import { useMemo, useState } from 'react';
-import { BudgetSummary } from '../molecules/BudgetSummary';
-import { TransactionList } from '../molecules/TransactionList';
-import { PieChartWithCenterValue } from '../molecules/PieChartWithCenterValue';
 import { ProgressBar } from '../atoms/ProgessBar';
+import { BudgetSummary } from '../molecules/BudgetSummary';
+import { PieChartWithCenterValue } from '../molecules/PieChartWithCenterValue';
+import { TransactionList } from '../molecules/TransactionList';
 
 interface Transaction {
   label: string;
   amount: number;
+  name: string;
 }
 
 interface BudgetCardProps {
@@ -71,9 +72,7 @@ export const BudgetCard: React.FC<BudgetCardProps> = ({
         <div className="mt-4">
           <div className="mb-2 flex items-center justify-between">
             <span className="text-sm">Spent</span>
-            <span className="text-base font-bold">
-              {progressPercentage.toFixed(1)}%
-            </span>
+            <span className="text-base font-bold">{progressPercentage.toFixed(1)}%</span>
           </div>
           <ProgressBar percentage={progressPercentage} colorClass={getProgressColor()} />
         </div>

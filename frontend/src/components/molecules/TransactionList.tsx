@@ -5,6 +5,7 @@ interface TransactionItem {
   label: string;
   amount: number;
   color: string;
+  name: string;
 }
 
 interface TransactionListProps {
@@ -26,7 +27,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({ transactions, 
         >
           <div className="flex items-center">
             <ColorDot color={t.color} />
-            <span className="ml-2 text-sm">{t.label}</span>
+            <span className="ml-2 text-sm">{t.name}</span>
           </div>
         </li>
       ))}

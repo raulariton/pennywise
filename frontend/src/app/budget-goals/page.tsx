@@ -1,35 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  LineChart,
-  Line,
-} from 'recharts';
-import {
-  TrendingUp,
-  TrendingDown,
-  Target,
-  DollarSign,
-  Calendar,
-  Plus,
-  Settings,
-  Bell,
-  User,
-} from 'lucide-react';
-import PageTemplate from '@/components/templates/PageTemplate';
-import BudgetOverviewChart from '@/components/organisms/BudgetOverviewChart';
+import { QuickStats } from '@/components/atoms/QuickStats';
+import AddBudgetDialog from '@/components/organisms/AddBudgetDialog';
+import AddGoalDialog from '@/components/organisms/AddGoalDialog';
 import BudgetList from '@/components/organisms/BudgetList';
+
 import GoalList from '@/components/organisms/GoalList';
+import { MonthPicker } from '@/components/organisms/MonthCalendar';
+import PageTemplate from '@/components/templates/PageTemplate';
+import { useFetchBudgets } from '@/hooks/crud/useBudget';
 import { motion } from 'framer-motion';
+import React, { useState } from 'react';
 
 interface Transaction {
   label: string;
@@ -64,113 +45,111 @@ const COLORS = [
 ];
 
 const Dashboard: React.FC = () => {
-  const budgetData = [
-    {
-      category: 'Food & Dining',
-      spent: 847,
-      budget: 1000,
-      transactions: [
-        { label: 'Restaurants', amount: 420 },
-        { label: 'Groceries', amount: 280 },
-        { label: 'Coffee Shops', amount: 90 },
-        { label: 'Delivery', amount: 57 },
-      ],
+  const [selectedMonth, setSelectedMonth] = useState<string | undefined>();
+  const [goalsOpen, setGoalsOpen] = useState(false);
+  const [budgetOpen, setBudgetOpen] = useState(false);
+  const { budgets, isLoading, isError } = useFetchBudgets(selectedMonth);
+  const { budgetSum, spentSum } = (budgets || []).reduce(
+    (acc: { budgetSum: number; spentSum: number }, budget: any) => {
+      // backend response contains budget.amount and budget.spent
+      acc.budgetSum += budget.budget ?? budget.amount ?? 0; // depending on your API field name
+      acc.spentSum += budget.spent ?? 0;
+      return acc;
     },
-    {
-      category: 'Transportation',
-      spent: 340,
-      budget: 500,
-      transactions: [
-        { label: 'Gas', amount: 180 },
-        { label: 'Public Transit', amount: 85 },
-        { label: 'Uber/Lyft', amount: 75 },
-      ],
-    },
-    {
-      category: 'Entertainment',
-      spent: 285,
-      budget: 400,
-      transactions: [
-        { label: 'Movies', amount: 120 },
-        { label: 'Streaming', amount: 65 },
-        { label: 'Games', amount: 55 },
-        { label: 'Events', amount: 45 },
-      ],
-    },
-    {
-      category: 'Shopping',
-      spent: 520,
-      budget: 600,
-      transactions: [
-        { label: 'Clothing', amount: 280 },
-        { label: 'Electronics', amount: 150 },
-        { label: 'Home & Garden', amount: 90 },
-      ],
-    },
-  ];
+    { budgetSum: 0, spentSum: 0 },
+  );
 
-  const goals: Goal[] = [
-    {
-      id: '1',
-      title: 'Emergency Fund',
-      target: 10000,
-      current: 7500,
-      deadline: 'Dec 2025',
-      category: 'savings',
-    },
-    {
-      id: '2',
-      title: 'Investment Portfolio',
-      target: 25000,
-      current: 18500,
-      deadline: 'Jun 2026',
-      category: 'investment',
-    },
-    {
-      id: '3',
-      title: 'Pay Off Credit Card',
-      target: 5000,
-      current: 3200,
-      deadline: 'Mar 2025',
-      category: 'debt',
-    },
-    {
-      id: '4',
-      title: 'New MacBook Pro',
-      target: 2500,
-      current: 1200,
-      deadline: 'Sep 2025',
-      category: 'purchase',
-    },
-  ];
+  const remainingSum = Math.max(budgetSum - spentSum, 0);
 
-  const monthlyData = [
-    { month: 'Jan', income: 5200, expenses: 3800 },
-    { month: 'Feb', income: 5200, expenses: 4100 },
-    { month: 'Mar', income: 5500, expenses: 3900 },
-    { month: 'Apr', income: 5200, expenses: 4200 },
-    { month: 'May', income: 5200, expenses: 3700 },
-    { month: 'Jun', income: 5800, expenses: 4000 },
-  ];
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5 },
+    },
+  };
 
   return (
-    <PageTemplate navTitle="Budget and Goals" navSubtitle="Track your budget and goals">
-      <div className="min-h-screen">
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+    <PageTemplate navTitle="Budget & Goals" navSubtitle="Track your financial progress">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"
         >
-          <div className="mb-8">
-            <BudgetOverviewChart totalSpent={3000} totalRemaining={500} totalBudget={3500} />
-          </div>
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-            <div className="lg:col-span-2">
-              <BudgetList budgets={budgetData} />
+          {/* Header Section */}
+          <motion.div variants={itemVariants} className="mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div></div>
+
+              {/* Month Picker with better styling */}
+              <MonthPicker value={selectedMonth} onChange={setSelectedMonth} />
             </div>
-            <GoalList goals={goals} />
-          </div>
-        </motion.section>
+
+            {/* Quick Stats */}
+            <QuickStats
+              totalSpent={spentSum}
+              totalBudget={budgetSum}
+              totalRemaining={remainingSum}
+            />
+          </motion.div>
+
+          {/* Main Content Grid */}
+          <motion.div variants={itemVariants}>
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+              {/* Budget List - Takes up majority of space */}
+              <div className="lg:col-span-3">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+                  <div className="p-6 border-b border-gray-200 dark:border-slate-700">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                      Budget Categories
+                    </h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      Track spending across different categories
+                    </p>
+                  </div>
+                  <div className="p-6">
+                    <BudgetList month={selectedMonth} setIsOpen={setBudgetOpen} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Goals List - Sidebar with optimal width */}
+              <div className="lg:col-span-2">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 overflow-hidden h-fit sticky top-6">
+                  <div className="p-6 border-b border-gray-200 dark:border-slate-700">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                      Financial Goals
+                    </h2>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      Monitor your progress
+                    </p>
+                  </div>
+                  <div className="p-6">
+                    <GoalList setIsOpen={setGoalsOpen} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Dialogs */}
+        <AddBudgetDialog isOpen={budgetOpen} setIsOpen={setBudgetOpen} />
+        <AddGoalDialog isOpen={goalsOpen} setIsOpen={setGoalsOpen} />
       </div>
     </PageTemplate>
   );
