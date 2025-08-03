@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
+import { ErrorMessage } from '@/components/atoms/ErrorMessage';
+import AmountInput from '@/components/molecules/AddEntryDialog/AmountInput';
+import { FormField } from '@/components/molecules/FormField';
+import { Button } from '@/components/ui/button';
 import {
   DialogContent,
   DialogDescription,
-  DialogTitle,
   DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog';
-import { ErrorMessage } from '@/components/atoms/ErrorMessage';
-import { FormField } from '@/components/molecules/FormField';
-import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useCreateBudget } from '@/hooks/crud/useBudget';
+import { Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
 import CategorySelectWithId from '../molecules/CategorySelectWithId';
-import AmountInput from '@/components/molecules/AddEntryDialog/AmountInput';
-import TextAreaInputWithCharacterLimit from '@/components/molecules/AddEntryDialog/TextAreaInputWithCharacterLimit';
 
 const AddBudgetDialogContent = (props: { setIsOpen: (open: boolean) => void }) => {
   const { createBudget, isLoading, isError } = useCreateBudget();
@@ -91,15 +90,6 @@ const AddBudgetDialogContent = (props: { setIsOpen: (open: boolean) => void }) =
                 className="border rounded p-2 w-full"
                 value={formData.month}
                 onChange={(e) => setFormData({ ...formData, month: e.target.value })}
-              />
-            </FormField>
-
-            <FormField label="Description (optional)">
-              <TextAreaInputWithCharacterLimit
-                onValueChange={(e) => {
-                  setFormData({ ...formData, description: e.target.value });
-                }}
-                value={formData.description || ''}
               />
             </FormField>
 

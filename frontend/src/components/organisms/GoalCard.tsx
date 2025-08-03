@@ -17,7 +17,14 @@ export const GoalCard: React.FC<{ goal: Goal }> = ({ goal }) => {
 
   return (
     <div className="rounded-2xl border bg-gradient-to-t bg-t from-primary/5 to-card p-6 shadow-sm transition-all duration-300 hover:shadow-lg">
-      <GoalHeader title={goal.title} deadline={goal.dueDate} category={goal.category} />
+      <GoalHeader
+        id={goal.id}
+        title={goal.title}
+        currentAmount={goal.currentAmount}
+        targetAmount={goal.targetAmount}
+        deadline={goal.dueDate}
+        category={goal.category}
+      />
       <GoalProgress progress={progress} />
       <div className="flex items-center justify-between text-sm">
         <CurrencyText amount={goal.currentAmount} />

@@ -9,7 +9,7 @@ export interface BudgetFormData {
   amount: number;
   categoryName: string; // string = categoryId
   description?: string;
-  month: Date; // e.g. "2025-08-01"
+  month: string; // e.g. "2025-08-01"
 }
 
 export interface Budget {

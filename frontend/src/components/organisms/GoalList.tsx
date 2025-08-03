@@ -11,6 +11,7 @@ interface Props {
 
 const GoalList: React.FC<Props> = ({ setIsOpen }) => {
   const { goals, isLoading, isError } = useFetchGoals();
+  console.log(goals);
   if (isLoading) {
     return (
       <div>

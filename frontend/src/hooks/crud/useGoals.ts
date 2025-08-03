@@ -1,7 +1,7 @@
-import useSWR, { mutate } from 'swr';
-import { useEffect, useState } from 'react';
 import useApiClientPrivate, { useApiClientPrivateFetcher } from '@/hooks/useApiClientPrivate';
 import useToast from '@/hooks/useToast';
+import { useEffect, useState } from 'react';
+import useSWR, { mutate } from 'swr';
 
 // Types
 export interface GoalFormData {
@@ -80,6 +80,49 @@ export const useCreateGoal = () => {
 
   return {
     createGoal,
+    isLoading: loading,
+    isError: error,
+  };
+};
+
+/**
+ * Update an existing financial goal.
+ */
+export const useUpdateGoal = () => {
+  const { apiClient } = useApiClientPrivate();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const updateGoal = async (goalId: string, goalData: Partial<GoalFormData>) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const payload = {
+        title: goalData.title,
+        targetAmount: goalData.targetAmount,
+        currentAmount: goalData.currentAmount,
+        dueDate: goalData.dueDate,
+      };
+
+      const response = await apiClient.put(`/goals/${goalId}`, payload);
+      const updatedGoal = response.data;
+
+      // Refresh the /goals cache
+      await mutate('/goals');
+
+      return updatedGoal;
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || 'Failed to update goal';
+      setError(errorMessage);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    updateGoal,
     isLoading: loading,
     isError: error,
   };
