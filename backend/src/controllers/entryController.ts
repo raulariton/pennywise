@@ -5,6 +5,7 @@ import dataSource from '@config/database';
 import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { convertCurrency, findEntryById } from '@services/entryServices';
 import { round } from 'reliable-round';
+import { getCategoryByName } from '@services/categoryServices';
 
 /*
 This controller handles CRUD operations for entries.
@@ -54,22 +55,10 @@ export class EntryController {
       return;
     }
 
-    const categoryRepository = dataSource.getRepository(Category);
-    let categoryEntity;
+    const categoryEntity = await getCategoryByName(category, res);
 
-    try {
-      // Try to find the category by name (optionally scoped to user)
-      categoryEntity = await categoryRepository.findOne({
-        where: { name: category },
-      });
-
-      if (!categoryEntity) {
-        throw new Error(`Category "${category}" doesn't exist.`);
-      }
-    } catch (err) {
-      res.status(500).json({ error: 'Error processing category.' });
-      return;
-    }
+    // error response message is already handled in getCategoryByName
+    if (!categoryEntity) return;
 
     const entry = Object.assign(new Entry(), {
       type,

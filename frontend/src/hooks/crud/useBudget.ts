@@ -2,11 +2,13 @@ import { Category } from '@/hooks/crud/useCategories';
 import useApiClientPrivate, { useApiClientPrivateFetcher } from '@/hooks/useApiClientPrivate';
 import useToast from '@/hooks/useToast';
 import { useEffect, useState } from 'react';
-import useSWR, { mutate } from 'swr';
+import { mutate } from 'swr';
+import { useSWRCustom } from '@/hooks/crud/useEntries';
 
 // Types
 export interface BudgetFormData {
   amount: number;
+  currency?: string;
   categoryName: string; // string = categoryId
   description?: string;
   month: string; // e.g. "2025-08-01"
@@ -29,9 +31,7 @@ export const useFetchBudgets = (month: string | undefined) => {
   const toast = useToast();
 
   // Build the key dynamically based on the month param
-  const endpoint = isReady && month ? `/budget/${month}` : null;
-
-  const { data, error, isLoading } = useSWR(endpoint, fetcher);
+  const { data, error, isLoading } = useSWRCustom(isReady ? `/budget/${month}` : null, fetcher)
 
   useEffect(() => {
     if (error) {
@@ -60,18 +60,12 @@ export const useCreateBudget = () => {
     setError(null);
 
     try {
-      const payload = {
-        amount: budgetData.amount,
-        categoryName: budgetData.categoryName,
-        description: budgetData.description,
-        month: budgetData.month,
-      };
 
-      const response = await apiClient.post('/budget', payload);
+      const response = await apiClient.post('/budget', budgetData);
       const newBudget = response.data;
 
       // Refresh the /budget cache
-      await mutate('/budget');
+      await mutate(() => true);
 
       return newBudget;
     } catch (error: any) {

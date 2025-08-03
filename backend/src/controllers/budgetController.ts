@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import dataSource from '@config/database';
 import { BudgetPlan } from '@entities/Budget';
 import { Entry, EntryType } from '@entities/Entry';
+import { getCategoryByName } from '@services/categoryServices';
 
 export class BudgetController {
   /**
@@ -62,7 +63,7 @@ export class BudgetController {
    * Create a new budget plan for a category
    */
   static async createBudget(req: Request, res: Response): Promise<void> {
-    const { categoryId, amount } = req.body;
+    const { amount, currency, categoryName, description, month } = req.body;
     const userId = (req as any).user?.id;
 
     if (!userId) {
@@ -70,15 +71,20 @@ export class BudgetController {
       return;
     }
 
-    if (!categoryId || !amount) {
-      res.status(400).json({ error: 'categoryId and amount are required fields.' });
+    if (!amount || !currency || !categoryName || !month) {
+      res.status(400).json({ error: 'Amount, currency, category name and month are required.' });
       return;
     }
+
+    const category = await getCategoryByName(categoryName, res);
+
+    // error response message is already handled in getCategoryByName
+    if (!category) return;
 
     try {
       const budgetRepo = dataSource.getRepository(BudgetPlan);
       const plan = budgetRepo.create({
-        category: { id: categoryId } as any,
+        category: { id: category.id } as any,
         user: { id: userId } as any,
         amount,
       });
