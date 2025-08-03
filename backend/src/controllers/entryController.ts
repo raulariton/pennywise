@@ -4,6 +4,7 @@ import { Category } from '@entities/Category';
 import dataSource from '@config/database';
 import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { convertCurrency, findEntryById } from '@services/entryServices';
+import { round } from 'reliable-round';
 
 /*
 This controller handles CRUD operations for entries.
@@ -242,8 +243,8 @@ export class EntryController {
         const [year, month] = yearAndMonth.split('-');
         return {
           month: new Date(`${year}-${month}-01`).toLocaleString('en', { month: 'long' }),
-          income: monthlyCashFlow[yearAndMonth].income,
-          expense: monthlyCashFlow[yearAndMonth].expense,
+          income: round(monthlyCashFlow[yearAndMonth].income, 2),
+          expense: round(monthlyCashFlow[yearAndMonth].expense, 2),
         };
       });
 
@@ -414,19 +415,19 @@ export class EntryController {
 
       // return the dashboard metrics
       res.status(200).json({
-        totalIncomeThisMonth: totalIncomeThisMonth,
-        totalExpensesThisMonth: totalExpensesThisMonth,
+        totalIncomeThisMonth: round(totalIncomeThisMonth, 2),
+        totalExpensesThisMonth: round(totalExpensesThisMonth, 2),
 
         incomeDifference: incomeDifference,
         incomePercentChange: incomePercentChange,
-        expenseDifference: expenseDifference,
-        expensePercentChange: expensePercentChange,
+        expenseDifference: round(expenseDifference, 2),
+        expensePercentChange: round(expensePercentChange, 2),
 
         insights: getPersonalizedMessageFromMonthComparison({
-          totalIncomeThisMonth: totalIncomeThisMonth,
-          totalExpensesThisMonth: totalExpensesThisMonth,
-          totalIncomeLastMonth: totalIncomeLastMonth,
-          totalExpensesLastMonth: totalExpensesLastMonth,
+          totalIncomeThisMonth: round(totalIncomeThisMonth, 2),
+          totalExpensesThisMonth: round(totalExpensesThisMonth, 2),
+          totalIncomeLastMonth: round(totalIncomeLastMonth, 2),
+          totalExpensesLastMonth: round(totalExpensesLastMonth, 2),
         }),
 
         topSpendingCategoryThisMonth,

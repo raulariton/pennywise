@@ -9,6 +9,7 @@ import categoryRoutes from '@routes/categoryRoutes';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import budgetRoutes from '@routes/budgetPlans';
+import goalRoutes from '@routes/goalRoutes';
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -32,6 +33,7 @@ app.use('/budget', budgetRoutes);
 app.use('/auth', authRoutes);
 app.use('/entries', entryRoutes);
 app.use('/categories', categoryRoutes);
+app.use('/goals', goalRoutes);
 
 // test route
 // TODO: remove

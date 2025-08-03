@@ -1,27 +1,35 @@
-import { ReactNode } from 'react';
-import Navbar from '@/components/organisms/Navbar';
-import Sidebar from '@/components/organisms/Sidebar';
+import { AppSidebar } from "@/components/app-sidebar"
+import { SiteHeader } from "@/components/site-header"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@/components/ui/sidebar"
 
-export default function PageTemplate({ children, navTitle, navSubtitle }: { children: ReactNode, navTitle: string, navSubtitle?: string }) {
+export default function PageTemplate({title, subtitle, children}: { title: string, subtitle?: string, children: React.ReactNode }) {
   return (
-    <div className="bg-card flex min-h-screen flex-col">
-      {/* Top navbar fixed at the top */}
-      <div className="fixed top-0 left-0 right-0 z-40">
-        <Navbar title={navTitle} subtitle={navSubtitle}/>
-      </div>
-
-      {/* Main content container with sidebar and content */}
-      <div className="flex min-h-screen">
-        {/* Sidebar - fixed position */}
-        <aside className="flex-shrink-0">
-          <Sidebar />
-        </aside>
-
-        {/* Main content area - takes remaining width with proper top spacing */}
-        <main className="ml-64 flex-1 transition-all duration-200 pt-25">
-          <div className="h-full p-6">{children}</div>
-        </main>
-      </div>
-    </div>
-  );
+    <SidebarProvider
+      style={
+        {
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar variant="inset"/>
+      <SidebarInset>
+        <SiteHeader
+          title={title}
+          subtitle={subtitle}
+        />
+        <div className="flex flex-1 flex-col">
+          <div className="@container/main flex flex-1 flex-col gap-2">
+            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+              <div className="px-4 lg:px-6">
+                {children}
+              </div>
+            </div>
+          </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  )
 }

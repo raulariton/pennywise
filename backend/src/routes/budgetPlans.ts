@@ -6,7 +6,7 @@ const budgetRoutes = Router();
 
 budgetRoutes.use('/', verifyTokenMiddleware);
 
-budgetRoutes.get('/', BudgetController.getBudgets);
+budgetRoutes.get('/:month', BudgetController.getBudgets);
 budgetRoutes.post('/', BudgetController.createBudget);
 budgetRoutes.put('/:id', BudgetController.updateBudget);
 
