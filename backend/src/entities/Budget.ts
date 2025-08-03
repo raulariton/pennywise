@@ -17,6 +17,9 @@ export class BudgetPlan {
   @JoinColumn({ name: 'categoryId', referencedColumnName: 'id' })
   category!: Category;
 
+  @Column({ type: 'date' })
+  month!: Date;
+
   // Which user owns this plan
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })

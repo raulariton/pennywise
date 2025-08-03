@@ -1,4 +1,4 @@
-import { useFetchEntries } from '@/hooks/crud/useEntries';
+import { Entry, useFetchEntries } from '@/hooks/crud/useEntries';
 import { TransactionRow } from '../molecules/TransactionRow';
 import useSWR from 'swr';
 import { useApiClientPrivateFetcher } from '@/hooks/useApiClientPrivate';
@@ -41,7 +41,7 @@ export const TransactionTable = () => {
             </tr>
           </thead>
           <tbody className="divide-border divide-y">
-            {entries.map((entry, index) => (
+            {entries.map((entry: Entry, index: number) => (
               <TransactionRow key={entry.id} entry={entry} index={index} />
             ))}
           </tbody>

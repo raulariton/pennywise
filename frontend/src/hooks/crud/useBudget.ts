@@ -47,6 +47,31 @@ export const useFetchBudgets = (month: string | undefined) => {
 };
 
 /**
+ * Fetch all budgets for all months for the authenticated user.
+ */
+export const useFetchAllBudgets = () => {
+  const { fetcher, isReady } = useApiClientPrivateFetcher();
+  const toast = useToast();
+
+  // This endpoint fetches ALL budgets (no month filter)
+  const endpoint = isReady ? `/budget` : null;
+
+  const { data, error, isLoading } = useSWR(endpoint, fetcher);
+
+  useEffect(() => {
+    if (error) {
+      toast.error('Failed to fetch all budgets. Please try again later.');
+    }
+  }, [error, toast]);
+
+  return {
+    budgets: data,
+    isLoading,
+    isError: error,
+  };
+};
+
+/**
  * Create a new budget plan.
  */
 
