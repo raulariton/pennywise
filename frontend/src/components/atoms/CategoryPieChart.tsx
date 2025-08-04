@@ -17,7 +17,7 @@ const COLORS = [
 ];
 
 export default function CategoryPieChart() {
-  const [selectedMonth, setSelectedMonth] = useState<string>();
+  const [selectedMonth, setSelectedMonth] = useState<string>(new Date().toISOString());
   const { budgets, isLoading } = useFetchBudgets(selectedMonth);
 
   // Transform budgets data into a format suitable for PieChart
