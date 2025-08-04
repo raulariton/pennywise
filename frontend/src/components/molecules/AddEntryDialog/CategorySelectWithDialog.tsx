@@ -1,5 +1,5 @@
 import EntryCategoryItem from '@/components/atoms/AddEntryDialog/EntryCategoryItem';
-import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -7,10 +7,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { CATEGORY_ICONS } from '@/config/categoryIcons';
-import { Category } from '@/hooks/crud/useCategories';
+import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 function CategoriesGrid(props: { handleCategorySelect: (category: string) => void }) {
   return (
@@ -28,7 +27,11 @@ function CategoriesGrid(props: { handleCategorySelect: (category: string) => voi
   );
 }
 
-function CategorySelectTrigger(props: { category: string | undefined, placeholder?: string, onClick: () => void }) {
+function CategorySelectTrigger(props: {
+  category: string | undefined;
+  placeholder?: string;
+  onClick: () => void;
+}) {
   return (
     <Button
       variant={'outline'}
@@ -47,12 +50,15 @@ function CategorySelectTrigger(props: { category: string | undefined, placeholde
   );
 }
 
-const CategorySelectWithDialog = (props: { currentCategory: Category, setCategory: (category: Category) => void}) => {
+const CategorySelectWithDialog = (props: {
+  currentCategory: string;
+  setCategory: (category: string) => void;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleCategorySelect = (selectedCategory: string | undefined) => {
-    props.setCategory(selectedCategory);
+  const handleCategorySelect = (selectedCategory: string) => {
     if (selectedCategory) {
+      props.setCategory(selectedCategory); // should update parent
       setIsOpen(false);
     }
   };
@@ -61,10 +67,7 @@ const CategorySelectWithDialog = (props: { currentCategory: Category, setCategor
     <div>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <CategorySelectTrigger
-            category={props.currentCategory}
-            onClick={setIsOpen}
-          />
+          <CategorySelectTrigger category={props.currentCategory} onClick={() => setIsOpen(true)} />
         </DialogTrigger>
         <DialogContent className="w-fit">
           <DialogHeader>

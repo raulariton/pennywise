@@ -166,9 +166,11 @@ export class BudgetController {
       res.status(401).json({ error: 'Unauthorized: User ID is required.' });
       return;
     }
-
+    console.log(categoryName, amount, currency, month);
     if (!categoryName || !amount || !month || !currency) {
-      res.status(400).json({ error: 'categoryName, amount, currency, and month are required fields.' });
+      res
+        .status(400)
+        .json({ error: 'categoryName, amount, currency, and month are required fields.' });
       return;
     }
 
@@ -176,10 +178,10 @@ export class BudgetController {
       const budgetRepo = dataSource.getRepository(BudgetPlan);
 
       // Find category by name
-      const category = await getCategoryByName(categoryName)
+      const category = await getCategoryByName(categoryName);
 
       if (!category) {
-        res.status(500).json({ error: 'Error processing category.' })
+        res.status(500).json({ error: 'Error processing category.' });
         return;
       }
 

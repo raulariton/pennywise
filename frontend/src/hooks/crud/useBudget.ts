@@ -1,15 +1,15 @@
 import { Category } from '@/hooks/crud/useCategories';
+import { useSWRCustom } from '@/hooks/crud/useEntries';
 import useApiClientPrivate, { useApiClientPrivateFetcher } from '@/hooks/useApiClientPrivate';
 import useToast from '@/hooks/useToast';
 import { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
-import { useSWRCustom } from '@/hooks/crud/useEntries';
 
 // Types
 export interface BudgetFormData {
   amount: number;
   currency?: string;
-  category: string; // string = categoryId
+  categoryName: string; // string = categoryId
   month: string; // e.g. "2025-08-01"
 }
 
@@ -30,7 +30,7 @@ export const useFetchBudgets = (month: string | undefined) => {
   const toast = useToast();
 
   // Build the key dynamically based on the month param
-  const { data, error, isLoading } = useSWRCustom(isReady ? `/budget/${month}` : null, fetcher)
+  const { data, error, isLoading } = useSWRCustom(isReady ? `/budget/${month}` : null, fetcher);
 
   useEffect(() => {
     if (error) {
@@ -84,7 +84,6 @@ export const useCreateBudget = () => {
     setError(null);
 
     try {
-
       const response = await apiClient.post('/budget', budgetData);
       const newBudget = response.data;
 

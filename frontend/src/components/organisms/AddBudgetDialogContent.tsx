@@ -1,28 +1,27 @@
+import { ErrorMessage } from '@/components/atoms/ErrorMessage';
 import AmountInput from '@/components/molecules/AddEntryDialog/AmountInput';
+import CategorySelectWithDialog from '@/components/molecules/AddEntryDialog/CategorySelectWithDialog';
+import CurrencySelect from '@/components/molecules/AddEntryDialog/CurrencySelect';
+import { FormField } from '@/components/molecules/FormField';
+import { Button } from '@/components/ui/button';
 import {
   DialogContent,
   DialogDescription,
-  DialogTitle,
   DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog';
-import { ErrorMessage } from '@/components/atoms/ErrorMessage';
-import { FormField } from '@/components/molecules/FormField';
-import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { BudgetFormData, useCreateBudget } from '@/hooks/crud/useBudget';
-import CurrencySelect from '@/components/molecules/AddEntryDialog/CurrencySelect';
-import { Category } from '@/hooks/crud/useCategories';
-import CategorySelectWithDialog from '@/components/molecules/AddEntryDialog/CategorySelectWithDialog';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 const AddBudgetDialogContent = (props: { setIsOpen: (open: boolean) => void }) => {
   const { createBudget, isLoading, isError } = useCreateBudget();
 
   const [formData, setFormData] = useState<BudgetFormData>({
     amount: 0,
-    currency: '',
-    category: '',
+    currency: 'USD', // Set a default currency instead of empty string
+    categoryName: '',
     // Default to current year-month
     month: new Date().toISOString().slice(0, 7),
   });
@@ -30,8 +29,27 @@ const AddBudgetDialogContent = (props: { setIsOpen: (open: boolean) => void }) =
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.amount || !formData.category || !formData.month) {
-      toast.error('Please fill in all required fields.');
+    // More comprehensive validation
+    const validationErrors: string[] = [];
+
+    if (!formData.amount || formData.amount <= 0) {
+      validationErrors.push('Amount must be greater than 0');
+    }
+
+    if (!formData.categoryName || formData.categoryName.trim() === '') {
+      validationErrors.push('Category is required');
+    }
+
+    if (!formData.currency || formData.currency.trim() === '') {
+      validationErrors.push('Currency is required');
+    }
+
+    if (!formData.month || formData.month.trim() === '') {
+      validationErrors.push('Month is required');
+    }
+
+    if (validationErrors.length > 0) {
+      toast.error(validationErrors.join(', '));
       return;
     }
 
@@ -39,15 +57,25 @@ const AddBudgetDialogContent = (props: { setIsOpen: (open: boolean) => void }) =
       // Convert YYYY-MM to YYYY-MM-01 to match backend normalization
       const fullMonthDate = `${formData.month}-01`;
 
-      await createBudget({
-        ...formData,
+      // Create the payload with proper validation
+      const budgetPayload = {
+        amount: Number(formData.amount), // Ensure it's a number
+        currency: formData.currency.trim(),
+        categoryName: formData.categoryName.trim(),
         month: fullMonthDate,
-      });
+      };
 
-      console.log('Budget created successfully: ', formData);
+      console.log('Submitting budget data:', budgetPayload);
+
+      await createBudget(budgetPayload);
+
+      console.log('Budget created successfully');
+      toast.success('Budget created successfully!');
       props.setIsOpen(false);
     } catch (err) {
       console.error('Submission failed', err);
+      // Error is handled by the hook, but we can show additional feedback
+      toast.error('Failed to create budget. Please try again.');
     }
   };
 
@@ -60,39 +88,55 @@ const AddBudgetDialogContent = (props: { setIsOpen: (open: boolean) => void }) =
       <div className="flex items-center justify-center">
         <div className="w-full max-w-md">
           <form onSubmit={handleSubmit} className="space-y-4">
-            <FormField label="Amount">
+            <FormField label="Amount *">
               <div className="w-full">
                 <div className="relative flex rounded-lg shadow-sm">
                   <AmountInput
                     currencyCode={formData.currency}
                     inputValue={formData.amount}
-                    inputOnChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                    inputOnChange={(e) => {
+                      const value = parseFloat(e.target.value);
+                      setFormData({
+                        ...formData,
+                        amount: isNaN(value) ? 0 : value,
+                      });
+                    }}
                   />
                   <CurrencySelect
                     currentlySelectedCurrency={formData.currency}
-                    onSelectionChange={(currency) =>
-                      setFormData({ ...formData, currency: currency })
-                    }
+                    onSelectionChange={(currency) => {
+                      // Ensure currency is not empty
+                      if (currency && currency.trim() !== '') {
+                        setFormData({ ...formData, currency: currency.trim() });
+                      }
+                    }}
                   />
                 </div>
               </div>
             </FormField>
 
-            <FormField label="Category">
+            <FormField label="Category *">
               <CategorySelectWithDialog
-                currentCategory={formData.category}
-                setCategory={(category: Category) => {
-                  setFormData({ ...formData, category: category });
+                currentCategory={formData.categoryName}
+                setCategory={(category: string) => {
+                  if (category) {
+                    setFormData({ ...formData, categoryName: category.trim() });
+                  }
                 }}
               />
             </FormField>
 
-            <FormField label="Month">
+            <FormField label="Month *">
               <input
                 type="month"
                 className="border rounded p-2 w-full"
                 value={formData.month}
-                onChange={(e) => setFormData({ ...formData, month: e.target.value })}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    setFormData({ ...formData, month: e.target.value });
+                  }
+                }}
+                required
               />
             </FormField>
 
@@ -101,17 +145,22 @@ const AddBudgetDialogContent = (props: { setIsOpen: (open: boolean) => void }) =
             )}
 
             <div className="flex space-x-2">
-              <Button className="flex-1" onClick={() => props.setIsOpen(false)} type="button">
+              <Button
+                className="flex-1"
+                onClick={() => props.setIsOpen(false)}
+                type="button"
+                variant="outline"
+              >
                 Cancel
               </Button>
               <Button className="flex-1" type="submit" disabled={isLoading}>
                 {isLoading ? (
                   <div className="flex items-center space-x-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Submitting...</span>
+                    <span>Creating...</span>
                   </div>
                 ) : (
-                  'Submit'
+                  'Create Budget'
                 )}
               </Button>
             </div>
