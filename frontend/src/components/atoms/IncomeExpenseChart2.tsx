@@ -53,30 +53,29 @@ export default function IncomeVsExpensesChart() {
   };
 
   return (
-    <div className="w-full h-[450px] bg-white rounded-xl p-4 shadow">
+    <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Income vs Expenses</h2>
         <div className="space-x-2">
           <button
             onClick={() => setPeriod('6m')}
-            className={`px-3 py-1 rounded ${
-              period === '6m' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+            className={`px-3 py-1 font-semibold rounded-full ${
+              period === '6m' ? 'bg-cyan-600 hover:bg-cyan-700 text-primary-foreground' : 'bg-input'
             }`}
           >
             6M
           </button>
           <button
             onClick={() => setPeriod('1y')}
-            className={`px-3 py-1 rounded ${
-              period === '1y' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+            className={`px-3 py-1 font-semibold rounded-full ${
+              period === '1y' ? 'bg-cyan-600 hover:bg-cyan-700 text-primary-foreground' : 'bg-input'
             }`}
           >
             1Y
           </button>
           <button
             onClick={() => setPeriod('5y')}
-            className={`px-3 py-1 rounded ${
-              period === '5y' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+            className={`px-3 py-1 font-semibold rounded-full ${
+              period === '5y' ? 'bg-cyan-600 hover:bg-cyan-700 text-primary-foreground' : 'bg-input'
             }`}
           >
             5Y
@@ -84,7 +83,7 @@ export default function IncomeVsExpensesChart() {
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height={450} className="mb-5">
         <LineChart data={getData()}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="month" />

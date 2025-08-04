@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import dataSource from '@config/database';
 import { BudgetPlan } from '@entities/Budget';
 import { Entry, EntryType } from '@entities/Entry';
-import { getCategoryByName } from '@services/categoryServices';
+import { getC } from '@services/categoryServices';
 import { Category } from '@entities/Category';
 
 function normalizeMonthDate(input: string): Date {

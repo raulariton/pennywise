@@ -42,9 +42,8 @@ export default function CategoryPieChart() {
   const data = sampleData[selectedMonth] || [];
 
   return (
-    <div className="w-full max-w-2xl bg-white rounded-xl p-4 shadow">
+    <div>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">Expenses by Category</h2>
         <MonthPicker value={selectedMonth} onChange={setSelectedMonth} />
       </div>
 
@@ -75,7 +74,7 @@ export default function CategoryPieChart() {
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: COLORS[index % COLORS.length] }}
             />
-            <span className="text-sm text-gray-700">
+            <span className="text-sm">
               {entry.name}: {entry.value}
             </span>
           </div>

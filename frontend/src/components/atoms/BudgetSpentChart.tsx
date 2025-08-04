@@ -180,150 +180,146 @@ export default function BudgetVsSpentChart() {
   }
 
   return (
-    <div className="w-full max-w-6xl space-y-6">
+    <div className="w-full max-w-6xl space-y-6 p-6">
       {/* Controls and Chart */}
-      <Card className="bg-gradient-to-br from-white/95 to-white/80 backdrop-blur-xl border-0 shadow-xl">
-        <CardContent className="p-6">
-          {/* Controls */}
-          <div className="flex flex-col lg:flex-row justify-between gap-6 mb-8">
-            {/* Category Selection */}
-            <div className="flex flex-col space-y-2">
-              <label className="text-sm font-semibold text-gray-700 flex items-center">
-                <Filter className="w-4 h-4 mr-2" />
-                Category
-              </label>
-              <select
-                className="bg-white/90 backdrop-blur border border-gray-200 rounded-xl px-4 py-3 font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 min-w-[200px]"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                disabled={!categories.length}
-              >
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
+      {/* Controls */}
+      <div className="flex flex-col lg:flex-row justify-between gap-6 mb-8">
+        {/* Category Selection */}
+        <div className="flex flex-col space-y-2">
+          <label className="text-sm font-semibold flex items-center">
+            <Filter className="w-4 h-4 mr-2" />
+            Category
+          </label>
+          <select
+            className="bg-input border border-border rounded-xl px-4 py-3 font-medium focus:outline-none focus:ring-2 focus:ring-(--theme) focus:border-transparent transition-all duration-300 min-w-[200px]"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            disabled={!categories.length}
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat} style={{ backgroundColor: '--var(--input)' }}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
 
-            {/* Time Range Selection */}
-            <div className="flex flex-col space-y-2">
-              <label className="text-sm font-semibold text-gray-700">Time Range</label>
-              <div className="flex space-x-2">
-                <FilterButton
-                  active={selectedRange === '6m'}
-                  onClick={() => setSelectedRange('6m')}
-                >
-                  6 Months
-                </FilterButton>
-                <FilterButton
-                  active={selectedRange === '1y'}
-                  onClick={() => setSelectedRange('1y')}
-                >
-                  1 Year
-                </FilterButton>
-              </div>
-            </div>
-
-            {/* Chart Type Selection */}
+        {/* Time Range Selection */}
+        <div className="flex flex-col space-y-2">
+          <label className="text-sm font-semibold">Time Range</label>
+          <div className="flex space-x-2">
+            <FilterButton
+              active={selectedRange === '6m'}
+              onClick={() => setSelectedRange('6m')}
+            >
+              6 Months
+            </FilterButton>
+            <FilterButton
+              active={selectedRange === '1y'}
+              onClick={() => setSelectedRange('1y')}
+            >
+              1 Year
+            </FilterButton>
           </div>
+        </div>
 
-          {/* Chart */}
-          {data.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="bg-gray-100 rounded-full p-6 mb-4">
-                <BarChart3 className="w-12 h-12 text-gray-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No Data Available</h3>
-              <p className="text-gray-600 max-w-md">
-                No budget data found for the selected category and time range. Try selecting a
-                different category or time period.
-              </p>
-            </div>
-          ) : (
-            <div className="bg-gradient-to-br from-gray-50/50 to-white/50 rounded-xl p-6">
-              <ResponsiveContainer width="100%" height={400}>
-                {chartType === 'composed' ? (
-                  <ComposedChart
-                    data={data}
-                    margin={{ top: 20, right: 30, left: 10, bottom: 20 }} // add margins
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="label" stroke="#9CA3AF" fontSize={12} fontWeight={500} />
-                    <YAxis stroke="#9CA3AF" fontSize={12} fontWeight={500} />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend
-                      verticalAlign="top"
-                      height={40}
-                      iconType="rect"
-                      wrapperStyle={{ fontSize: '14px', fontWeight: '500' }}
-                    />
-                    <Bar
-                      dataKey="budget"
-                      fill="url(#budgetGradient)"
-                      radius={[6, 6, 0, 0]}
-                      name="Budget"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="spent"
-                      stroke="#EF4444"
-                      strokeWidth={3}
-                      dot={{ fill: '#EF4444', strokeWidth: 2, r: 5 }}
-                      name="Spent"
-                    />
-                    <defs>
-                      <linearGradient id="budgetGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.9} />
-                        <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.6} />
-                      </linearGradient>
-                    </defs>
-                  </ComposedChart>
-                ) : (
-                  <AreaChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="label" stroke="#9CA3AF" fontSize={12} fontWeight={500} />
-                    <YAxis stroke="#9CA3AF" fontSize={12} fontWeight={500} />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend
-                      verticalAlign="top"
-                      height={40}
-                      iconType="rect"
-                      wrapperStyle={{ fontSize: '14px', fontWeight: '500' }}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="budget"
-                      stackId="1"
-                      stroke="#3B82F6"
-                      fill="url(#budgetAreaGradient)"
-                      name="Budget"
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="spent"
-                      stackId="2"
-                      stroke="#EF4444"
-                      fill="url(#spentAreaGradient)"
-                      name="Spent"
-                    />
-                    <defs>
-                      <linearGradient id="budgetAreaGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.7} />
-                        <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1} />
-                      </linearGradient>
-                      <linearGradient id="spentAreaGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#EF4444" stopOpacity={0.7} />
-                        <stop offset="95%" stopColor="#EF4444" stopOpacity={0.1} />
-                      </linearGradient>
-                    </defs>
-                  </AreaChart>
-                )}
-              </ResponsiveContainer>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        {/* Chart Type Selection */}
+      </div>
+
+      {/* Chart */}
+      {data.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="rounded-full p-6 mb-4">
+            <BarChart3 className="size-12" />
+          </div>
+          <h3 className="text-lg font-semibold mb-2">No Data Available</h3>
+          <p className="text-muted-foreground max-w-md">
+            No budget data found for the selected category and time range. Try selecting a
+            different category or time period.
+          </p>
+        </div>
+      ) : (
+        <div className="rounded-xl p-6">
+          <ResponsiveContainer width="100%" height={400}>
+            {chartType === 'composed' ? (
+              <ComposedChart
+                data={data}
+                margin={{ top: 20, right: 30, left: 10, bottom: 20 }} // add margins
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis dataKey="label" stroke="#9CA3AF" fontSize={12} fontWeight={500} />
+                <YAxis stroke="#9CA3AF" fontSize={12} fontWeight={500} />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend
+                  verticalAlign="top"
+                  height={40}
+                  iconType="rect"
+                  wrapperStyle={{ fontSize: '14px', fontWeight: '500' }}
+                />
+                <Bar
+                  dataKey="budget"
+                  fill="url(#budgetGradient)"
+                  radius={[6, 6, 0, 0]}
+                  name="Budget"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="spent"
+                  stroke="#EF4444"
+                  strokeWidth={3}
+                  dot={{ fill: '#EF4444', strokeWidth: 2, r: 5 }}
+                  name="Spent"
+                />
+                <defs>
+                  <linearGradient id="budgetGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.9} />
+                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.6} />
+                  </linearGradient>
+                </defs>
+              </ComposedChart>
+            ) : (
+              <AreaChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis dataKey="label" stroke="#9CA3AF" fontSize={12} fontWeight={500} />
+                <YAxis stroke="#9CA3AF" fontSize={12} fontWeight={500} />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend
+                  verticalAlign="top"
+                  height={40}
+                  iconType="rect"
+                  wrapperStyle={{ fontSize: '14px', fontWeight: '500' }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="budget"
+                  stackId="1"
+                  stroke="#3B82F6"
+                  fill="url(#budgetAreaGradient)"
+                  name="Budget"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="spent"
+                  stackId="2"
+                  stroke="#EF4444"
+                  fill="url(#spentAreaGradient)"
+                  name="Spent"
+                />
+                <defs>
+                  <linearGradient id="budgetAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.7} />
+                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="spentAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#EF4444" stopOpacity={0.7} />
+                    <stop offset="95%" stopColor="#EF4444" stopOpacity={0.1} />
+                  </linearGradient>
+                </defs>
+              </AreaChart>
+            )}
+          </ResponsiveContainer>
+        </div>
+      )}
     </div>
   );
 }
