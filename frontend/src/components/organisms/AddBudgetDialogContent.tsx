@@ -1,31 +1,28 @@
-import { ErrorMessage } from '@/components/atoms/ErrorMessage';
 import AmountInput from '@/components/molecules/AddEntryDialog/AmountInput';
-import { FormField } from '@/components/molecules/FormField';
-import { Button } from '@/components/ui/button';
 import {
   DialogContent,
   DialogDescription,
-  DialogHeader,
   DialogTitle,
+  DialogHeader,
 } from '@/components/ui/dialog';
-import { useCreateBudget } from '@/hooks/crud/useBudget';
-import { Loader2 } from 'lucide-react';
-import React, { useState } from 'react';
+import { ErrorMessage } from '@/components/atoms/ErrorMessage';
+import { FormField } from '@/components/molecules/FormField';
 import { toast } from 'sonner';
-import CategorySelectWithId from '../molecules/CategorySelectWithId';
+import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { BudgetFormData, useCreateBudget } from '@/hooks/crud/useBudget';
+import CurrencySelect from '@/components/molecules/AddEntryDialog/CurrencySelect';
+import { Category } from '@/hooks/crud/useCategories';
+import CategorySelectWithDialog from '@/components/molecules/AddEntryDialog/CategorySelectWithDialog';
+import { useState } from 'react';
 
 const AddBudgetDialogContent = (props: { setIsOpen: (open: boolean) => void }) => {
   const { createBudget, isLoading, isError } = useCreateBudget();
 
-  const [formData, setFormData] = useState<{
-    amount: number;
-    categoryName: string;
-    description?: string;
-    month: string;
-  }>({
+  const [formData, setFormData] = useState<BudgetFormData>({
     amount: 0,
-    categoryName: '',
-    description: '',
+    currency: '',
+    category: '',
     // Default to current year-month
     month: new Date().toISOString().slice(0, 7),
   });
@@ -33,7 +30,7 @@ const AddBudgetDialogContent = (props: { setIsOpen: (open: boolean) => void }) =
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.amount || !formData.categoryName || !formData.month) {
+    if (!formData.amount || !formData.category || !formData.month) {
       toast.error('Please fill in all required fields.');
       return;
     }
@@ -43,9 +40,7 @@ const AddBudgetDialogContent = (props: { setIsOpen: (open: boolean) => void }) =
       const fullMonthDate = `${formData.month}-01`;
 
       await createBudget({
-        amount: formData.amount,
-        categoryName: formData.categoryName,
-        description: formData.description,
+        ...formData,
         month: fullMonthDate,
       });
 
@@ -66,20 +61,28 @@ const AddBudgetDialogContent = (props: { setIsOpen: (open: boolean) => void }) =
         <div className="w-full max-w-md">
           <form onSubmit={handleSubmit} className="space-y-4">
             <FormField label="Amount">
-              <AmountInput
-                currencyCode="USD"
-                inputValue={formData.amount}
-                inputOnChange={(e) =>
-                  setFormData({ ...formData, amount: parseFloat(e.target.value) })
-                }
-              />
+              <div className="w-full">
+                <div className="relative flex rounded-lg shadow-sm">
+                  <AmountInput
+                    currencyCode={formData.currency}
+                    inputValue={formData.amount}
+                    inputOnChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                  />
+                  <CurrencySelect
+                    currentlySelectedCurrency={formData.currency}
+                    onSelectionChange={(currency) =>
+                      setFormData({ ...formData, currency: currency })
+                    }
+                  />
+                </div>
+              </div>
             </FormField>
 
             <FormField label="Category">
-              <CategorySelectWithId
-                currentCategory={formData.categoryName}
-                setCategory={(categoryName) => {
-                  setFormData({ ...formData, categoryName });
+              <CategorySelectWithDialog
+                currentCategory={formData.category}
+                setCategory={(category: Category) => {
+                  setFormData({ ...formData, category: category });
                 }}
               />
             </FormField>

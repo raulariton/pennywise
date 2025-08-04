@@ -10,7 +10,7 @@ interface PrimaryButtonProps {
 export const PrimaryButton: React.FC<PrimaryButtonProps> = ({ onClick, children, className }) => (
   <button
     onClick={onClick}
-    className={`flex items-center space-x-2 rounded-lg bg-blue-600 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-700 ${className}`}
+    className={`flex items-center space-x-2 rounded-lg px-4 py-2 text-sm transition-colors font-semibold bg-cyan-600 hover:bg-cyan-700 text-primary-foreground ${className}`}
   >
     {children}
   </button>

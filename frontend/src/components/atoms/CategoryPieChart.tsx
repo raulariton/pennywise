@@ -31,9 +31,8 @@ export default function CategoryPieChart() {
   }, [budgets]);
 
   return (
-    <div className="w-full max-w-2xl bg-white rounded-xl p-4 shadow">
+    <div>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">Expenses by Category</h2>
         <MonthPicker value={selectedMonth} onChange={setSelectedMonth} />
       </div>
 

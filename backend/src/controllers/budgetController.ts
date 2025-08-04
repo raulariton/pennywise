@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import dataSource from '@config/database';
 import { BudgetPlan } from '@entities/Budget';
 import { Entry, EntryType } from '@entities/Entry';
+import { getCategoryByName } from '@services/categoryServices';
 import { Category } from '@entities/Category';
 
 function normalizeMonthDate(input: string): Date {
@@ -158,7 +159,7 @@ export class BudgetController {
    * Create a new budget plan for a category
    */
   static async createBudget(req: Request, res: Response): Promise<void> {
-    const { categoryName, amount, month } = req.body;
+    const { categoryName, amount, currency, month } = req.body;
     const userId = (req as any).user?.id;
 
     if (!userId) {
@@ -166,22 +167,19 @@ export class BudgetController {
       return;
     }
 
-    if (!categoryName || !amount || !month) {
-      res.status(400).json({ error: 'categoryName, amount, and month are required fields.' });
+    if (!categoryName || !amount || !month || !currency) {
+      res.status(400).json({ error: 'categoryName, amount, currency, and month are required fields.' });
       return;
     }
 
     try {
-      const categoryRepo = dataSource.getRepository(Category);
       const budgetRepo = dataSource.getRepository(BudgetPlan);
 
       // Find category by name
-      const category = await categoryRepo.findOne({
-        where: { name: categoryName },
-      });
+      const category = await getCategoryByName(categoryName)
 
       if (!category) {
-        res.status(404).json({ error: `Category '${categoryName}' not found.` });
+        res.status(500).json({ error: 'Error processing category.' })
         return;
       }
 
@@ -200,6 +198,9 @@ export class BudgetController {
     }
   }
 
+  /**
+   * Utility function to create multiple budgets in bulk
+   */
   static async createBulkBudgets(req: Request, res: Response): Promise<void> {
     const { budgets } = req.body; // budgets = [{ categoryName, amount, month }, ...]
     const userId = (req as any).user?.id;

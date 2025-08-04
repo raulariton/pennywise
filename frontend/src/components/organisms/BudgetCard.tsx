@@ -80,7 +80,7 @@ export const BudgetCard: React.FC<BudgetCardProps> = ({
 
       {/* Back Layer */}
       <div
-        className={`absolute inset-0 bg-input p-6 transition-all duration-500 ease-in-out ${
+        className={`absolute p-6 inset-0 bg-input p-6 transition-all duration-500 ease-in-out ${
           isHovered ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0'
         }`}
       >

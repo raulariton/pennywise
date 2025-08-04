@@ -14,7 +14,7 @@ export const SecondaryButton: React.FC<SecondaryButtonProps> = ({
 }) => (
   <button
     onClick={onClick}
-    className={`flex items-center space-x-2 rounded-lg bg-gray-100 px-3 py-1.5 text-sm text-gray-700 transition-colors hover:bg-gray-200 ${className}`}
+    className={`flex items-center space-x-2 rounded-lg px-3 py-1.5 text-sm font-semibold bg-cyan-600 hover:bg-cyan-700 text-primary-foreground transition-colors  ${className}`}
   >
     {children}
   </button>
