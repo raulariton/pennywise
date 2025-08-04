@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import dataSource from '@config/database';
 import { BudgetPlan } from '@entities/Budget';
 import { Entry, EntryType } from '@entities/Entry';
-import { getC } from '@services/categoryServices';
+import { getCategoryByName } from '@services/categoryServices';
 import { Category } from '@entities/Category';
 
 function normalizeMonthDate(input: string): Date {
@@ -173,16 +173,13 @@ export class BudgetController {
     }
 
     try {
-      const categoryRepo = dataSource.getRepository(Category);
       const budgetRepo = dataSource.getRepository(BudgetPlan);
 
       // Find category by name
-      const category = await categoryRepo.findOne({
-        where: { name: categoryName },
-      });
+      const category = await getCategoryByName(categoryName)
 
       if (!category) {
-        res.status(404).json({ error: `Category '${categoryName}' not found.` });
+        res.status(500).json({ error: 'Error processing category.' })
         return;
       }
 
@@ -201,6 +198,9 @@ export class BudgetController {
     }
   }
 
+  /**
+   * Utility function to create multiple budgets in bulk
+   */
   static async createBulkBudgets(req: Request, res: Response): Promise<void> {
     const { budgets } = req.body; // budgets = [{ categoryName, amount, month }, ...]
     const userId = (req as any).user?.id;

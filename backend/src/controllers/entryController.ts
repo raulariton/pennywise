@@ -55,10 +55,12 @@ export class EntryController {
       return;
     }
 
-    const categoryEntity = await getCategoryByName(category, res);
+    const categoryEntity = await getCategoryByName(category);
 
-    // error response message is already handled in getCategoryByName
-    if (!categoryEntity) return;
+    if (!categoryEntity) {
+      res.status(500).json({ error: 'Error processing category.' });
+      return;
+    }
 
     const entry = Object.assign(new Entry(), {
       type:type,
