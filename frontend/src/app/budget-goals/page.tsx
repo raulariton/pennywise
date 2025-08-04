@@ -11,6 +11,8 @@ import PageTemplate from '@/components/templates/PageTemplate';
 import { useFetchBudgets } from '@/hooks/crud/useBudget';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
+import { Plus } from 'lucide-react';
+import { PrimaryButton } from '@/components/atoms/PrimaryButton';
 
 interface Transaction {
   label: string;
@@ -45,7 +47,7 @@ const COLORS = [
 ];
 
 const Dashboard: React.FC = () => {
-  const [selectedMonth, setSelectedMonth] = useState<string | undefined>();
+  const [selectedMonth, setSelectedMonth] = useState<string | undefined>(new Date().toISOString());
   const [goalsOpen, setGoalsOpen] = useState(false);
   const [budgetOpen, setBudgetOpen] = useState(false);
   const { budgets, isLoading, isError } = useFetchBudgets(selectedMonth);
@@ -82,8 +84,8 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <PageTemplate navTitle="Budget & Goals" navSubtitle="Track your financial progress">
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <PageTemplate title="Budget & Goals" subtitle="Track your financial progress">
+      <div>
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -93,9 +95,6 @@ const Dashboard: React.FC = () => {
           {/* Header Section */}
           <motion.div variants={itemVariants} className="mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-              <div></div>
-
-              {/* Month Picker with better styling */}
               <MonthPicker value={selectedMonth} onChange={setSelectedMonth} />
             </div>
 
@@ -112,14 +111,20 @@ const Dashboard: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
               {/* Budget List - Takes up majority of space */}
               <div className="lg:col-span-3">
-                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
-                  <div className="p-6 border-b border-gray-200 dark:border-slate-700">
-                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-border overflow-hidden">
+                  <div className="p-6 border-b border-border flex flex-row items-center justify-between">
+                    <div>
+                      <h2 className="text-xl font-semibold">
                       Budget Categories
-                    </h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      Track spending across different categories
-                    </p>
+                      </h2>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        The budgets you have set for each category this month
+                      </p>
+                    </div>
+                    <PrimaryButton onClick={() => setBudgetOpen(true)}>
+                      <Plus className="h-4 w-4" />
+                      <span>Add a budget</span>
+                    </PrimaryButton>
                   </div>
                   <div className="p-6">
                     <BudgetList month={selectedMonth} setIsOpen={setBudgetOpen} />
@@ -129,13 +134,13 @@ const Dashboard: React.FC = () => {
 
               {/* Goals List - Sidebar with optimal width */}
               <div className="lg:col-span-2">
-                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 overflow-hidden h-fit sticky top-6">
-                  <div className="p-6 border-b border-gray-200 dark:border-slate-700">
-                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-border overflow-hidden h-fit sticky top-6">
+                  <div className="p-6 border-b border-border">
+                    <h2 className="text-xl font-semibold">
                       Financial Goals
                     </h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      Monitor your progress
+                    <p className="text-sm text-muted-foreground mt-1">
+                      View and update the goals you have set
                     </p>
                   </div>
                   <div className="p-6">

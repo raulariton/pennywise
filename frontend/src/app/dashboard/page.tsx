@@ -279,13 +279,6 @@ export default function Page() {
         transition={{ duration: 0.6, delay: 0.3 }}
       >
         <h2 className="mt-6 mb-3 text-2xl font-light">Recent Transactions</h2>
-        {/*<motion.button*/}
-        {/*  whileHover={{ scale: 1.05 }}*/}
-        {/*  whileTap={{ scale: 0.95 }}*/}
-        {/*  className="text-muted-foreground ml-2 text-sm font-medium transition-colors duration-200 hover:text-(--theme)"*/}
-        {/*>*/}
-        {/*  View All*/}
-        {/*</motion.button>*/}
         <TransactionTable />
       </motion.section>
       <AddEntryDialog open={showModal} setOpen={setShowModal} />

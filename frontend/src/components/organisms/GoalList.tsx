@@ -37,7 +37,7 @@ const GoalList: React.FC<Props> = ({ setIsOpen }) => {
         {goals && goals.length > 0 ? (
           goals.map((goal: any) => <GoalCard key={goal.id} goal={goal} />)
         ) : (
-          <p className="p-4 text-gray-500">No goals yet.</p>
+          <p className="p-4 text-muted-foreground">No goals yet.</p>
         )}
       </div>
     </div>

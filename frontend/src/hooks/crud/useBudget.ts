@@ -3,12 +3,13 @@ import useApiClientPrivate, { useApiClientPrivateFetcher } from '@/hooks/useApiC
 import useToast from '@/hooks/useToast';
 import { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
+import { useSWRCustom } from '@/hooks/crud/useEntries';
 
 // Types
 export interface BudgetFormData {
   amount: number;
-  categoryName: string; // string = categoryId
-  description?: string;
+  currency?: string;
+  category: string; // string = categoryId
   month: string; // e.g. "2025-08-01"
 }
 
@@ -29,13 +30,36 @@ export const useFetchBudgets = (month: string | undefined) => {
   const toast = useToast();
 
   // Build the key dynamically based on the month param
-  const endpoint = isReady && month ? `/budget/${month}` : null;
+  const { data, error, isLoading } = useSWRCustom(isReady ? `/budget/${month}` : null, fetcher)
+
+  useEffect(() => {
+    if (error) {
+      toast.error('Failed to fetch budgets. Please try again later.');
+    }
+  }, [error, toast]);
+
+  return {
+    budgets: data,
+    isLoading,
+    isError: error,
+  };
+};
+
+/**
+ * Fetch all budgets for all months for the authenticated user.
+ */
+export const useFetchAllBudgets = () => {
+  const { fetcher, isReady } = useApiClientPrivateFetcher();
+  const toast = useToast();
+
+  // This endpoint fetches ALL budgets (no month filter)
+  const endpoint = isReady ? `/budget` : null;
 
   const { data, error, isLoading } = useSWR(endpoint, fetcher);
 
   useEffect(() => {
     if (error) {
-      toast.error('Failed to fetch budgets. Please try again later.');
+      toast.error('Failed to fetch all budgets. Please try again later.');
     }
   }, [error, toast]);
 
@@ -60,18 +84,12 @@ export const useCreateBudget = () => {
     setError(null);
 
     try {
-      const payload = {
-        amount: budgetData.amount,
-        categoryName: budgetData.categoryName,
-        description: budgetData.description,
-        month: budgetData.month,
-      };
 
-      const response = await apiClient.post('/budget', payload);
+      const response = await apiClient.post('/budget', budgetData);
       const newBudget = response.data;
 
       // Refresh the /budget cache
-      await mutate('/budget');
+      await mutate(() => true);
 
       return newBudget;
     } catch (error: any) {

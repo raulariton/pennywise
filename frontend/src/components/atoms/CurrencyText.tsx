@@ -5,6 +5,7 @@ interface CurrencyTextProps {
 }
 
 export const CurrencyText: React.FC<CurrencyTextProps> = ({ amount, className = '' }) => {
+  // TODO: change to preferred currency
   const formatted = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
