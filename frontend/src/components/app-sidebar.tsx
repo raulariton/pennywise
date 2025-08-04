@@ -1,29 +1,31 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { NavUser } from "@/components/nav-user"
+import Logo from '@/components/atoms/Logo';
+import { NavUser } from '@/components/nav-user';
+import AddEntryDialog from '@/components/organisms/AddEntryDialog';
+import { ThemeToggle } from '@/components/theme-toggle';
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter, SidebarGroup, SidebarGroupContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem, SidebarSeparator,
+  SidebarMenuItem,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
-import Logo from '@/components/atoms/Logo';
-import { Button } from '@/components/ui/button';
-import { Goal, House, Plus, PlusCircle, Settings, TrendingUp } from 'lucide-react';
+import { Goal, House, PlusCircle, Settings, TrendingUp } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import {ThemeToggle} from "@/components/theme-toggle";
-import AddEntryDialog from '@/components/organisms/AddEntryDialog';
+import * as React from 'react';
 
 const data = [
   {
     user: {
-      name: "full name",
-      email: "email",
-      avatar: "",
+      name: 'full name',
+      email: 'email',
+      avatar: '',
     },
   },
   {
@@ -35,7 +37,7 @@ const data = [
       },
       {
         title: 'Statistics',
-        url: '#',
+        url: '/statistics',
         icon: TrendingUp,
       },
       {
@@ -43,13 +45,12 @@ const data = [
         url: '/budget-goals',
         icon: Goal,
       },
-    ]
+    ],
   },
   {
-    group: [
-    ]
-  }
-]
+    group: [],
+  },
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
@@ -70,7 +71,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
-        <SidebarSeparator/>
+          <SidebarSeparator />
         </SidebarHeader>
         <SidebarContent className="p-2">
           {/* main group */}
@@ -83,7 +84,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     className="bg-cyan-600 hover:bg-cyan-700 text-primary-foreground font-semibold duration-200 ease-linear"
                     onClick={() => setAddEntryOpen(true)}
                   >
-                    <PlusCircle/>
+                    <PlusCircle />
                     Add Entry
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -108,7 +109,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
-           </SidebarGroupContent>
+            </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
@@ -120,7 +121,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <span>Settings</span>
                 </a>
               </SidebarMenuButton>
-              <ThemeToggle/>
+              <ThemeToggle />
             </SidebarMenuItem>
             <NavUser user={data[0].user} />
           </SidebarMenu>
@@ -129,5 +130,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {/* AddEntryDialog rendered here, controlled by sidebar state */}
       <AddEntryDialog open={addEntryOpen} setOpen={setAddEntryOpen} />
     </>
-  )
+  );
 }
