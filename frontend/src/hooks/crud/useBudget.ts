@@ -2,15 +2,14 @@ import { Category } from '@/hooks/crud/useCategories';
 import useApiClientPrivate, { useApiClientPrivateFetcher } from '@/hooks/useApiClientPrivate';
 import useToast from '@/hooks/useToast';
 import { useEffect, useState } from 'react';
-import { mutate } from 'swr';
+import useSWR, { mutate } from 'swr';
 import { useSWRCustom } from '@/hooks/crud/useEntries';
 
 // Types
 export interface BudgetFormData {
   amount: number;
   currency?: string;
-  categoryName: string; // string = categoryId
-  description?: string;
+  category: string; // string = categoryId
   month: string; // e.g. "2025-08-01"
 }
 

@@ -23,7 +23,7 @@ export interface Entry extends EntryFormData {
   updatedAt: string;
 }
 
-const useSWRCustom = (key, fetcher) => {
+export const useSWRCustom = (key, fetcher) => {
   const { data, error, isLoading } = useSWR(key, fetcher, {
     refreshInterval: 7500,
   });
